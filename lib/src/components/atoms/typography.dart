@@ -8,23 +8,23 @@ class Paragraph extends StatelessWidget {
     this.text, {
     this.maxLines,
     this.overflow,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Text
   final String text;
 
   /// Max lines
-  final int maxLines;
+  final int? maxLines;
 
   /// Overflow
-  final TextOverflow overflow;
+  final TextOverflow? overflow;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.bodyText2.copyWith(
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(
             height: 1.3,
             fontSize: 12,
           ),
@@ -39,7 +39,7 @@ class Caption extends StatelessWidget {
   /// Constructor
   const Caption(
     this.text, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Text for caption
@@ -58,7 +58,7 @@ class ConsoleText extends StatelessWidget {
   /// Constructor
   const ConsoleText(
     this.text, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Content for stdout
@@ -81,7 +81,7 @@ class ConsoleText extends StatelessWidget {
 /// Console text info
 class ConsoleTextInfo extends StatelessWidget {
   /// Constructor
-  const ConsoleTextInfo(this.text, {Key key}) : super(key: key);
+  const ConsoleTextInfo(this.text, {Key? key}) : super(key: key);
 
   /// Content
   final String text;
@@ -100,7 +100,7 @@ class ConsoleTextInfo extends StatelessWidget {
 /// Stderr Text widget
 class ConsoleTextError extends StatelessWidget {
   /// Constructor
-  const ConsoleTextError(this.text, {Key key}) : super(key: key);
+  const ConsoleTextError(this.text, {Key? key}) : super(key: key);
 
   /// Content
   final String text;
@@ -122,7 +122,7 @@ class Heading extends StatelessWidget {
   /// Constructor
   const Heading(
     this.text, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Content
@@ -132,7 +132,7 @@ class Heading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 18),
+      style: Theme.of(context).textTheme.headline6!.copyWith(fontSize: 18),
     );
   }
 }
@@ -142,7 +142,7 @@ class Subheading extends StatelessWidget {
   /// Constructor
   const Subheading(
     this.text, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// content

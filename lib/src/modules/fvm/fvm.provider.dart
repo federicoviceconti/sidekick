@@ -8,6 +8,7 @@ import 'package:fvm/fvm.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:state_notifier/state_notifier.dart';
 import 'package:watcher/watcher.dart';
+import 'package:collection/collection.dart';
 
 import '../../modules/common/dto/release.dto.dart';
 import '../../modules/common/utils/debounce.dart';
@@ -23,8 +24,12 @@ final cacheSizeProvider =
 
 final unusedReleaseSizeProvider = FutureProvider((ref) {
   final unused = ref.watch(unusedVersionProvider);
+
   // Get all directories
-  final directories = unused.map((version) => version.cache.dir).toList();
+  final directories = unused.map((version) => version.cache?.dir)
+      .whereNotNull()
+      .toList();
+
   return getDirectoriesSize(directories);
 });
 
@@ -48,13 +53,13 @@ final unusedVersionProvider = Provider((ref) {
 
 /// Releases  InfoProvider
 final fvmCacheProvider =
-    StateNotifierProvider<FvmCacheProvider, List<CacheVersion>>((ref) {
+    StateNotifierProvider<FvmCacheProvider, List<CacheVersion>?>((ref) {
   return FvmCacheProvider(ref: ref);
 });
 
 class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
   FvmCacheProvider({
-    this.ref,
+    required this.ref,
   }) : super([]) {
     reloadState();
     // Load State again while listening to directory
@@ -67,9 +72,9 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
   ProviderReference ref;
   List<CacheVersion> channels = [];
   List<CacheVersion> versions = [];
-  List<CacheVersion> all;
+  List<CacheVersion>? all;
 
-  StreamSubscription<WatchEvent> directoryWatcher;
+  StreamSubscription<WatchEvent>? directoryWatcher;
   final _debouncer = Debouncer(const Duration(seconds: 20));
 
   Future<void> _setTotalCacheSize() async {
@@ -89,24 +94,17 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
     await _setTotalCacheSize();
   }
 
-  CacheVersion getChannel(String name) {
+  CacheVersion? getChannel(String name) {
     if (channels.isNotEmpty) {
-      return channels.firstWhere(
-        (c) => c.name == name,
-        orElse: () => null,
-      );
+      return channels.firstWhereOrNull((c) => c.name == name);
     } else {
       return null;
     }
   }
 
-  CacheVersion getVersion(String name) {
+  CacheVersion? getVersion(String name) {
     if (versions.isNotEmpty) {
-      // ignore: avoid_function_literals_in_foreach_calls
-      return versions.firstWhere(
-        (v) => v.name == name,
-        orElse: () => null,
-      );
+      return versions.firstWhereOrNull((v) => v.name == name);
     } else {
       return null;
     }
@@ -114,7 +112,7 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
 
   @override
   void dispose() {
-    directoryWatcher.cancel();
+    directoryWatcher?.cancel();
     super.dispose();
   }
 }

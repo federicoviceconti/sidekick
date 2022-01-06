@@ -12,7 +12,7 @@ import 'components/fvm_release_list_item.dart';
 import 'dialogs/cleanup_unused_dialog.dart';
 
 class FVMScreen extends HookWidget {
-  const FVMScreen({Key key}) : super(key: key);
+  const FVMScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +29,10 @@ class FVMScreen extends HookWidget {
     }
 
     return SkScreen(
-      title: I18Next.of(context).t('modules:fvm.installedVersions'),
+      title: I18Next.of(context)!.t('modules:fvm.installedVersions'),
       actions: [
         Text(
-          I18Next.of(context).t(
+          I18Next.of(context)!.t(
             'modules:fvm.numberOfCachedVersions',
             variables: {
               'cachedVersions': cachedVersions.length,
@@ -43,12 +43,12 @@ class FVMScreen extends HookWidget {
         const FvmCacheSize(),
         const SizedBox(width: 20),
         Tooltip(
-          message: I18Next.of(context).t('modules:fvm.cleanUpTooltip'),
+          message: I18Next.of(context)!.t('modules:fvm.cleanUpTooltip'),
           child: OutlinedButton(
             onPressed: () async {
               await cleanupUnusedDialog(context);
             },
-            child: Text(I18Next.of(context).t('modules:fvm.cleanUp')),
+            child: Text(I18Next.of(context)!.t('modules:fvm.cleanUp')),
           ),
         )
       ],

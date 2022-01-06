@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
+import 'package:collection/collection.dart';
 
 import '../../components/atoms/sliver_animated_switcher.dart';
 import '../../components/atoms/typography.dart';
@@ -14,17 +15,18 @@ import 'components/release_list_item.dart';
 import 'releases.provider.dart';
 
 class ReleasesScreen extends HookWidget {
-  const ReleasesScreen({Key key}) : super(key: key);
+  const ReleasesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final filter = useProvider(filterProvider);
-    final versions = useProvider(filterableReleasesProvider);
+    final versions = useProvider(filterableReleasesProvider)
+        ?.whereNotNull().toList() ?? [];
     final releases = useProvider(releasesStateProvider);
 
     return SkScreen(
       extendBody: false,
-      title: I18Next.of(context).t('modules:releases.releases'),
+      title: I18Next.of(context)!.t('modules:releases.releases'),
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
@@ -47,12 +49,12 @@ class ReleasesScreen extends HookWidget {
                     children: [
                       const SizedBox(width: 10),
                       Subheading(
-                        I18Next.of(context).t('components:molecules.master'),
+                        I18Next.of(context)!.t('components:molecules.master'),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
                         child: Caption(
-                          I18Next.of(context).t(
+                          I18Next.of(context)!.t(
                               'modules:releases.theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional'),
                         ),
                       ),
@@ -79,11 +81,11 @@ class ReleasesScreen extends HookWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: releases.channels.map((channel) {
+                  children: releases.channels?.map((channel) {
                     return Expanded(
                       child: ChannelShowcaseItem(channel),
                     );
-                  }).toList(),
+                  }).toList() ?? [],
                 ),
               ),
             ),
@@ -91,9 +93,9 @@ class ReleasesScreen extends HookWidget {
               child: Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: releases.channels.map((channel) {
+                  children: releases.channels?.map((channel) {
                     return Expanded(child: ReleaseListItem(channel));
-                  }).toList(),
+                  }).toList() ?? [],
                 ),
               ),
             ),
@@ -115,7 +117,7 @@ class ReleasesScreen extends HookWidget {
                   Row(
                     children: [
                       Heading(
-                        I18Next.of(context).t('modules:releases.versions'),
+                        I18Next.of(context)!.t('modules:releases.versions'),
                       ),
                       const SizedBox(width: 10),
                       Chip(label: Text(versions.length.toString())),
@@ -128,7 +130,7 @@ class ReleasesScreen extends HookWidget {
                     items: Filter.values.map((Filter filter) {
                       final text = filter != Filter.all
                           ? filter.name.capitalize()
-                          : I18Next.of(context).t('modules:releases.all');
+                          : I18Next.of(context)!.t('modules:releases.all');
 
                       return DropdownMenuItem(
                         value: filter.name,
@@ -136,7 +138,10 @@ class ReleasesScreen extends HookWidget {
                       );
                     }).toList(),
                     onChanged: (value) {
-                      filter.state = filterFromName(value);
+                      final filterFound = filterFromName(value);
+                      if(filterFound != null) {
+                        filter.state = filterFound;
+                      }
                     },
                   ),
                 ],

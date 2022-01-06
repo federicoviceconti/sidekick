@@ -12,9 +12,9 @@ import 'terminal_processor.dart';
 class TerminalState {
   /// Constructor
   TerminalState({
-    this.lines,
+    this.lines = const [],
     this.processing = false,
-    List<String> cmdHistory,
+    required List<String> cmdHistory,
   }) : _cmdHistory = cmdHistory;
 
   /// Console lines
@@ -92,7 +92,7 @@ class ConsoleLine {
   final String text;
   ConsoleLine({
     this.type = OutputType.stdout,
-    this.text,
+    required this.text,
   });
 
   factory ConsoleLine.empty() {
@@ -127,7 +127,7 @@ final sandboxProvider =
 class SandboxStateNotifier extends StateNotifier<TerminalState> {
   final ProviderReference ref;
 
-  Isolate _isolate;
+  Isolate? _isolate;
 
   SandboxStateNotifier(this.ref) : super(TerminalState.empty());
 
@@ -142,7 +142,7 @@ class SandboxStateNotifier extends StateNotifier<TerminalState> {
 
   void _killIsolate() {
     if (_isolate != null) {
-      _isolate.kill();
+      _isolate!.kill();
     }
   }
 
@@ -154,7 +154,7 @@ class SandboxStateNotifier extends StateNotifier<TerminalState> {
   }
 
   Future<void> reboot(
-    ReleaseDto release,
+    ReleaseDto? release,
     Project project,
   ) async {
     /// Clear console
@@ -164,7 +164,7 @@ class SandboxStateNotifier extends StateNotifier<TerminalState> {
 
     state.addLine(
       'Rebooting environment for ${project.name}...\n'
-      'Flutter SDK (${release.name}) running on ${project.projectDir.path}\n\n',
+      'Flutter SDK (${release?.name ?? ''}) running on ${project.projectDir.path}\n\n',
     );
 
     _notifyListeners();
@@ -180,21 +180,21 @@ class SandboxStateNotifier extends StateNotifier<TerminalState> {
   /// Send command isolate
   Future<void> sendIsolate(
     String cmd,
-    ReleaseDto release,
+    ReleaseDto? release,
     Project project, {
     // Supress display command on terminal
     bool supressCmdOutput = false,
   }) async {
     try {
-      String execPath;
+      String? execPath;
 
       final args = cmd.split(' ');
       final firstArg = args.removeAt(0);
 
       if (firstArg == 'flutter') {
-        execPath = release.cache.flutterExec;
+        execPath = release?.cache?.flutterExec;
       } else if (firstArg == 'dart') {
-        execPath = release.cache.dartExec;
+        execPath = release?.cache?.dartExec;
       } else {
         state.addLineErr('Can only use "flutter" and "dart" commands');
         _notifyListeners();

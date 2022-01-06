@@ -10,12 +10,13 @@ import 'typography.dart';
 class Console extends HookWidget {
   final bool expand;
   final bool processing;
-  final Function() onExpand;
+  final Function()? onExpand;
+
   const Console({
     this.expand = false,
     this.processing = false,
     this.onExpand,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -23,8 +24,8 @@ class Console extends HookWidget {
     final output = useStream(fvmStdoutProvider);
     final lines = useState<List<String>>(['']);
 
-    useValueChanged(output, (_, __) {
-      lines.value.insert(0, output.data);
+    useValueChanged<AsyncSnapshot<String?>, String?>(output, (_, __) {
+      lines.value.insert(0, output.data ?? '');
       if (lines.value.length > 100) {
         lines.value.removeAt(lines.value.length - 1);
       }

@@ -8,7 +8,7 @@ import 'package:sidekick/src/modules/navigation/navigation.provider.dart';
 class NavigationIntent extends Intent {
   /// Constructor
   const NavigationIntent({
-    this.route,
+    required this.route,
   });
 
   /// Navigation route
@@ -19,8 +19,8 @@ class NavigationIntent extends Intent {
 class SkShortcutManager extends HookWidget {
   /// Constructor
   const SkShortcutManager({
-    Key key,
-    this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   /// Child

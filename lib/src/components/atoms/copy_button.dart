@@ -8,7 +8,7 @@ class CopyButton extends StatelessWidget {
   /// Constructor
   const CopyButton(
     this.content, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Content to copy
@@ -21,7 +21,7 @@ class CopyButton extends StatelessWidget {
       icon: const Icon(Icons.content_copy),
       onPressed: () async {
         await Clipboard.setData(ClipboardData(text: content));
-        notify(I18Next.of(context).t('components:atoms.copiedToClipboard'));
+        notify(I18Next.of(context)!.t('components:atoms.copiedToClipboard'));
       },
     );
   }

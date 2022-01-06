@@ -10,12 +10,13 @@ enum NavigationRoutes {
 }
 
 final navigationProvider =
-    StateNotifierProvider<NavigationProvider, NavigationRoutes>((_) {
+    StateNotifierProvider<NavigationProvider, NavigationRoutes?>((_) {
   return NavigationProvider();
 });
 
-class NavigationProvider extends StateNotifier<NavigationRoutes> {
-  NavigationRoutes previous;
+class NavigationProvider extends StateNotifier<NavigationRoutes?> {
+  NavigationRoutes? previous;
+
   NavigationProvider({
     NavigationRoutes route = NavigationRoutes.homeScreen,
   })  : previous = route,
@@ -29,7 +30,7 @@ class NavigationProvider extends StateNotifier<NavigationRoutes> {
 
   void goBack() {
     if (previous != null) {
-      goTo(previous);
+      goTo(previous!);
     }
   }
 }

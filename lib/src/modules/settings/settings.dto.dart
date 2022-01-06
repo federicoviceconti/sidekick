@@ -15,15 +15,13 @@ class AllSettings {
   FlutterSettings flutter;
 
   AllSettings({
-    this.sidekick,
-    this.fvm,
-    this.flutter,
-  }) {
-    fvm ??= FvmSettings();
-    sidekick ??= SidekickSettings();
-
-    flutter ??= FlutterSettings();
-  }
+    SidekickSettings? sidekick,
+    FvmSettings? fvm,
+    FlutterSettings? flutter,
+  })
+      : sidekick = sidekick ?? SidekickSettings(),
+        fvm = fvm ?? FvmSettings(),
+        flutter = flutter ?? FlutterSettings();
 
   AllSettings copy() => AllSettings(
         sidekick: SidekickSettings.fromJson(sidekick.toJson()),
@@ -56,8 +54,8 @@ class SidekickSettings {
   List<String> projectPaths;
   String themeMode;
   I18NextLocalizationDelegate localizationsDelegate;
-  Locale locale;
-  String ide;
+  Locale? locale;
+  String? ide;
 
   factory SidekickSettings.fromJson(String str) =>
       SidekickSettings.fromMap(json.decode(str));
@@ -72,8 +70,8 @@ class SidekickSettings {
 
     return SidekickSettings(
       projectPaths: (json['projectPaths'] as List<dynamic>).cast<String>(),
-      onlyProjectsWithFvm: json['onlyProjectsWithFvm'] as bool ?? false,
-      themeMode: json['themeMode'] as String ?? SettingsThemeMode.system,
+      onlyProjectsWithFvm: json['onlyProjectsWithFvm'] as bool,
+      themeMode: json['themeMode'] as String,
       locale: locale,
       ide: json['ide'],
     );
@@ -140,11 +138,11 @@ class FlutterSettings {
   /// Flutter settings from map
   factory FlutterSettings.fromMap(Map<String, bool> map) {
     return FlutterSettings(
-      analytics: map['analytics'],
-      macos: map['macos'],
-      windows: map['windows'],
-      linux: map['linux'],
-      web: map['web'],
+      analytics: map['analytics'] ?? false,
+      macos: map['macos']  ?? false,
+      windows: map['windows']  ?? false,
+      linux: map['linux'] ?? false,
+      web: map['web'] ?? false,
     );
   }
 

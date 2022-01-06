@@ -12,7 +12,7 @@ Future<void> cleanupUnusedDialog(BuildContext context) async {
 
   if (unusedVersions.isEmpty) {
     notify(I18Next.of(context)
-        .t('modules:fvm.dialogs.noUnusedFlutterSdkVersionsInstalled'));
+        !.t('modules:fvm.dialogs.noUnusedFlutterSdkVersionsInstalled'));
     return;
   }
 
@@ -24,7 +24,7 @@ Future<void> cleanupUnusedDialog(BuildContext context) async {
         builder: (context, setState) {
           return AlertDialog(
             title: Text(I18Next.of(context)
-                .t('modules:fvm.dialogs.cleanUpUnusedVersions')),
+                !.t('modules:fvm.dialogs.cleanUpUnusedVersions')),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
               TextButton(
@@ -32,7 +32,7 @@ Future<void> cleanupUnusedDialog(BuildContext context) async {
                   Navigator.of(context).pop();
                 },
                 child:
-                    Text(I18Next.of(context).t('modules:fvm.dialogs.cancel')),
+                    Text(I18Next.of(context)!.t('modules:fvm.dialogs.cancel')),
               ),
               TextButton(
                 onPressed: () async {
@@ -48,7 +48,7 @@ Future<void> cleanupUnusedDialog(BuildContext context) async {
                   Navigator.of(context).pop();
                 },
                 child:
-                    Text(I18Next.of(context).t('modules:fvm.dialogs.confirm')),
+                    Text(I18Next.of(context)!.t('modules:fvm.dialogs.confirm')),
               ),
             ],
             content: Container(
@@ -58,9 +58,9 @@ Future<void> cleanupUnusedDialog(BuildContext context) async {
                   child: Column(
                     children: [
                       Text(
-                        I18Next.of(context).t(
+                        I18Next.of(context)!.t(
                                 'modules:fvm.dialogs.theseVersionAreNotPinnedToAProject') +
-                            I18Next.of(context).t(
+                            I18Next.of(context)!.t(
                                 'modules:fvm.dialogs.doYouWantToRemoveThemToFreeUpSpace'),
                       ),
                       const SizedBox(height: 10),
@@ -75,7 +75,7 @@ Future<void> cleanupUnusedDialog(BuildContext context) async {
                               value: selected[version.name] ?? false,
                               onChanged: (value) {
                                 setState(() {
-                                  selected[version.name] = value;
+                                  selected[version.name] = value ?? false;
                                 });
                               },
                             );

@@ -37,7 +37,7 @@ const _iconsPosition = [
 class EmptyDataset extends StatelessWidget {
   /// Constructor
   const EmptyDataset({
-    this.icon,
+    required this.icon,
     this.iconColor,
     this.backgroundColor = Colors.black,
     this.child,
@@ -48,7 +48,7 @@ class EmptyDataset extends StatelessWidget {
   final Widget icon;
 
   /// Icon Color
-  final Color iconColor;
+  final Color? iconColor;
 
   /// Background color
   final Color backgroundColor;
@@ -56,12 +56,13 @@ class EmptyDataset extends StatelessWidget {
   final double opacity;
 
   /// child
-  final Widget child;
+  final Widget? child;
+
   @override
   Widget build(BuildContext context) {
     final bgIcons = _buildIconsBackground(
         icon: icon,
-        color: iconColor ?? Theme.of(context).textTheme.bodyText1.color);
+        color: iconColor ?? Theme.of(context).textTheme.bodyText1!.color!);
 
     return Stack(
       children: [
@@ -92,33 +93,33 @@ class EmptyDataset extends StatelessWidget {
   }
 }
 
-List<Widget> _buildIconsBackground({Widget icon, Color color}) {
+List<Widget> _buildIconsBackground({required Widget icon, Color? color}) {
   if (icon is Icon) {
     return _iconsPosition.map((i) {
       return Positioned(
-        top: i['top'],
-        bottom: i['bottom'],
-        left: i['left'],
-        right: i['right'],
+        top: i['top']?.toDouble(),
+        bottom: i['bottom']?.toDouble(),
+        left: i['left']?.toDouble(),
+        right: i['right']?.toDouble(),
         child: Icon(
           icon.icon,
-          size: _iconSize * i['size'],
-          color: color?.withOpacity(i['opacity']),
+          size: _iconSize * i['size']!,
+          color: color?.withOpacity(i['opacity']?.toDouble() ?? 0.0),
         ),
       );
     }).toList();
   }
   return _iconsPosition.map((i) {
     return Positioned(
-      top: i['top'],
-      bottom: i['bottom'],
-      left: i['left'],
-      right: i['right'],
+      top: i['top']?.toDouble(),
+      bottom: i['bottom']?.toDouble(),
+      left: i['left']?.toDouble(),
+      right: i['right']?.toDouble(),
       child: Opacity(
-        opacity: i['opacity'],
+        opacity: i['opacity']?.toDouble() ?? 0.0,
         child: SizedBox(
-          height: _iconSize * i['size'],
-          width: _iconSize * i['size'],
+          height: _iconSize * (i['size']?.toDouble() ?? 0.0),
+          width: _iconSize * (i['size']?.toDouble() ?? 0.0),
           child: icon,
         ),
       ),

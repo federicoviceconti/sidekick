@@ -58,7 +58,7 @@ class FvmApp extends StatelessWidget {
     }
 
     return ValueListenableBuilder<Box<SidekickSettings>>(
-      valueListenable: SettingsService.box.listenable(),
+      valueListenable: SettingsService.box!.listenable(),
       builder: (context, box, widget) {
         final settings = SettingsService.read();
 
@@ -75,7 +75,7 @@ class FvmApp extends StatelessWidget {
                 languageManager.supportedLocales.first,
             supportedLocales: languageManager.supportedLocales,
             localeResolutionCallback: (
-              Locale locale,
+              Locale? locale,
               Iterable<Locale> supportedLocales,
             ) {
               if (locale == null) {

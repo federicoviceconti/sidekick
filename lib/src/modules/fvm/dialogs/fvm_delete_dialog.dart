@@ -5,8 +5,8 @@ import '../../common/dto/release.dto.dart';
 
 void showDeleteDialog(
   BuildContext context, {
-  ReleaseDto item,
-  @required Function onDelete,
+  ReleaseDto? item,
+  required Function onDelete,
 }) {
   // flutter defined function
   showDialog(
@@ -15,12 +15,12 @@ void showDeleteDialog(
       // return object of type Dialog
       return AlertDialog(
         title: Text(I18Next.of(context)
-            .t('modules:fvm.dialogs.areYouSureYouWantToRemove')),
+            !.t('modules:fvm.dialogs.areYouSureYouWantToRemove')),
         content: Text(
-          I18Next.of(context).t(
+          I18Next.of(context)!.t(
             'modules:fvm.dialogs.thisWillRemoveItemnameCacheFromYourSystem',
             variables: {
-              'itemname': item.name,
+              'itemname': item?.name,
             },
           ),
         ),
@@ -31,14 +31,14 @@ void showDeleteDialog(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text(I18Next.of(context).t('modules:fvm.dialogs.cancel')),
+            child: Text(I18Next.of(context)!.t('modules:fvm.dialogs.cancel')),
           ),
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
               onDelete();
             },
-            child: Text(I18Next.of(context).t('modules:fvm.dialogs.confirm')),
+            child: Text(I18Next.of(context)!.t('modules:fvm.dialogs.confirm')),
           ),
         ],
       );

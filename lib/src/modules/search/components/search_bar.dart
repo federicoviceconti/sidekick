@@ -14,9 +14,9 @@ import 'search_results_list.dart';
 class SearchBar extends HookWidget {
   /// Constructor
   const SearchBar({
-    Key key,
-    // @required this.onFocusChanged,
-    // @required this.showSearch,
+    Key? key,
+    // required this.onFocusChanged,
+    // required this.showSearch,
   }) : super(key: key);
 
   @override
@@ -28,11 +28,11 @@ class SearchBar extends HookWidget {
     final controller = useFloatingSearchBarController();
     final showSearch = useState(false);
 
-    useValueChanged(currentRoute, (_, __) {
+    useValueChanged<NavigationRoutes?,NavigationRoutes?>(currentRoute, (_, __) {
       showSearch.value = currentRoute == NavigationRoutes.searchScreen;
     });
 
-    useValueChanged(showSearch.value, (_, __) {
+    useValueChanged<bool, bool>(showSearch.value, (_, __) {
       if (showSearch.value) {
         controller.open();
       } else {
@@ -67,7 +67,7 @@ class SearchBar extends HookWidget {
               ),
             ),
             FloatingSearchBar(
-              hint: I18Next.of(context).t('modules:search.components.search'),
+              hint: I18Next.of(context)!.t('modules:search.components.search'),
               controller: controller,
               progress: isLoading.value,
               shadowColor: Colors.transparent,
@@ -86,7 +86,7 @@ class SearchBar extends HookWidget {
                 if (query.isNotEmpty) {
                   isLoading.value = true;
                 }
-                queryProvider.state = query ?? '';
+                queryProvider.state = query;
                 await Future.delayed(const Duration(milliseconds: 250));
                 isLoading.value = false;
               },
@@ -103,7 +103,7 @@ class SearchBar extends HookWidget {
                   return Padding(
                     padding: const EdgeInsets.all(20),
                     child: Text(I18Next.of(context)
-                        .t('modules:search.components.noResults')),
+                        !.t('modules:search.components.noResults')),
                   );
                 }
 

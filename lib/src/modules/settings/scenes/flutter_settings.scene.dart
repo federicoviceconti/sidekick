@@ -14,7 +14,7 @@ class SettingsSectionFlutter extends HookWidget {
   const SettingsSectionFlutter(
     this.settings,
     this.onSave, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Settings
@@ -51,7 +51,7 @@ class SettingsSectionFlutter extends HookWidget {
                           ),
                         ),
                         child: Text(
-                          I18Next.of(context).t(
+                          I18Next.of(context)!.t(
                               'modules:settings.scenes.flutterSDKGlobalDescription'),
                         ),
                       ),
@@ -60,10 +60,10 @@ class SettingsSectionFlutter extends HookWidget {
                   ),
             SwitchListTile(
               title: Text(I18Next.of(context)
-                  .t('modules:settings.scenes.analyticsCrashReporting')),
+                  !.t('modules:settings.scenes.analyticsCrashReporting')),
               subtitle: Text(
                 I18Next.of(context)
-                    .t('modules:settings.scenes.analyticsCrashReportSubtitle'),
+                    !.t('modules:settings.scenes.analyticsCrashReportSubtitle'),
               ),
               value: !settings.flutter.analytics,
               onChanged: deactivate
@@ -75,10 +75,10 @@ class SettingsSectionFlutter extends HookWidget {
             ),
             const SizedBox(height: 20),
             Subheading(
-                I18Next.of(context).t('modules:settings.scenes.platforms')),
+                I18Next.of(context)!.t('modules:settings.scenes.platforms')),
             const SizedBox(height: 20),
             SwitchListTile(
-              title: Text(I18Next.of(context).t('modules:settings.scenes.web')),
+              title: Text(I18Next.of(context)!.t('modules:settings.scenes.web')),
               value: settings.flutter.web,
               onChanged: deactivate
                   ? null

@@ -7,8 +7,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class RefreshButton extends HookWidget {
   /// Constructor
   const RefreshButton({
-    @required this.onPressed,
-    Key key,
+    required this.onPressed,
+    Key? key,
   }) : super(key: key);
 
   /// On press handler
@@ -38,7 +38,7 @@ class RefreshButton extends HookWidget {
     }
 
     return OutlinedButton.icon(
-      label: Text(I18Next.of(context).t('components:atoms.refresh')),
+      label: Text(I18Next.of(context)!.t('components:atoms.refresh')),
       icon: refreshing.value
           ? renderIndicator()
           : const Icon(MdiIcons.refresh, size: 20),

@@ -14,15 +14,15 @@ import '../settings/settings.provider.dart';
 import 'fvm.provider.dart';
 
 class FvmQueue {
-  QueueItem activeItem;
+  QueueItem? activeItem;
   final Queue<QueueItem> queue;
-  FvmQueue({@required this.activeItem, @required this.queue});
+  FvmQueue({this.activeItem, required this.queue});
 
   bool get isEmpty {
     return queue.isEmpty;
   }
 
-  QueueItem get next {
+  QueueItem? get next {
     activeItem = queue.removeFirst();
     return activeItem;
   }
@@ -33,8 +33,8 @@ class FvmQueue {
 }
 
 class QueueItem {
-  final ReleaseDto version;
-  final QueueAction action;
+  final ReleaseDto? version;
+  final QueueAction? action;
   QueueItem({this.version, this.action});
 }
 
@@ -48,15 +48,15 @@ enum QueueAction {
 }
 
 /// Releases Provider
-final fvmQueueProvider = StateNotifierProvider<FvmQueueState, FvmQueue>((ref) {
+final fvmQueueProvider = StateNotifierProvider<FvmQueueState, FvmQueue?>((ref) {
   return FvmQueueState(ref: ref);
 });
 
 /// State of the FVM Queue
-class FvmQueueState extends StateNotifier<FvmQueue> {
+class FvmQueueState extends StateNotifier<FvmQueue?> {
   /// Constructor
   FvmQueueState({
-    @required this.ref,
+    required this.ref,
   }) : super(null) {
     state = FvmQueue(activeItem: null, queue: Queue());
   }
@@ -64,7 +64,7 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
   /// Provider ref to be used later
   final ProviderReference ref;
 
-  I18Next i18next;
+  late I18Next i18next;
 
   /// Retrieve FVM Settings
   FvmSettings get settings {
@@ -75,7 +75,7 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
   void install(
     BuildContext context,
     ReleaseDto version, {
-    bool skipSetup,
+    bool? skipSetup,
   }) async {
     skipSetup ??= settings.skipSetup;
     final action =
@@ -107,82 +107,97 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
   /// Runs queue
   void runQueue() async {
     try {
-      final queue = state.queue;
-      final activeItem = state.activeItem;
+      final queue = state?.queue;
+      final activeItem = state?.activeItem;
       // No need to run if empty
-      if (queue.isEmpty) return;
+      if (queue != null && queue.isEmpty) return;
       // If currently installing a version
       if (activeItem != null) return;
       // Gets next item of the queue
-      final item = state.next;
+      final item = state?.next;
       // Update queue
-      state = state.update();
+      state = state?.update();
+
+      if(item?.version == null) {
+        throw Exception(
+          'fvm_queue.provider.dart|runQueue: Version must not be null!');
+      }
 
       // Run through actions
-      switch (item.action) {
+      switch (item?.action) {
         case QueueAction.install:
-          await FVMClient.install(item.version.name);
+          await FVMClient.install(item!.version!.name);
           notify(
             i18next.t(
               'modules:fvm.versionItemversionnameHasBeenInstalled',
               variables: {
-                'itemVersionName': item.version.name,
+                'itemVersionName': item.version!.name,
               },
             ),
           );
           break;
         case QueueAction.setupOnly:
-          await FVMClient.setup(item.version.name);
+          await FVMClient.setup(item!.version!.name);
           notify(
             i18next.t(
               'modules:fvm.versionItemversionnameHasFinishedSetup',
               variables: {
-                'itemVersionName': item.version.name,
+                'itemVersionName': item.version!.name,
               },
             ),
           );
           break;
         case QueueAction.installAndSetup:
-          await FVMClient.install(item.version.name);
-          await FVMClient.setup(item.version.name);
+          await FVMClient.install(item!.version!.name);
+          await FVMClient.setup(item.version!.name);
           notify(
             i18next.t(
               'modules:fvm.versionItemversionnameHasBeenInstalled',
               variables: {
-                'itemVersionName': item.version.name,
+                'itemVersionName': item.version!.name,
               },
             ),
           );
           break;
         case QueueAction.channelUpgrade:
-          await FVMClient.upgradeChannel(item.version.cache);
+          if(item!.version!.cache == null) {
+            throw Exception(
+              'fvm_queue.provider.dart|runQueue: Cache must not be null!');
+          }
+
+          await FVMClient.upgradeChannel(item.version!.cache!);
           notify(
             i18next.t(
               'modules:fvm.channelItemversionnameHasBeenUpgraded',
               variables: {
-                'itemVersionName': item.version.name,
+                'itemVersionName': item.version!.name,
               },
             ),
           );
           break;
         case QueueAction.remove:
-          await FVMClient.remove(item.version.name);
+          await FVMClient.remove(item!.version!.name);
           notify(
             i18next.t(
               'modules:fvm.versionItemversionnameHasBeenRemoved',
               variables: {
-                'itemVersionName': item.version.name,
+                'itemVersionName': item.version!.name,
               },
             ),
           );
           break;
         case QueueAction.setGlobal:
-          await FVMClient.setGlobalVersion(item.version.cache);
+          if(item!.version!.cache == null) {
+            throw Exception(
+                'fvm_queue.provider.dart|runQueue: Cache must not be null!');
+          }
+
+          await FVMClient.setGlobalVersion(item.version!.cache!);
           notify(
             i18next.t(
               'modules:fvm.versionItemversionnameHasBeenSetAsGlobal',
               variables: {
-                'itemVersionName': item.version.name,
+                'itemVersionName': item.version!.name,
               },
             ),
           );
@@ -195,11 +210,11 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
     }
 
     // Set active item to null
-    state.activeItem = null;
+    state?.activeItem = null;
     // Run update on cache
     await ref.read(fvmCacheProvider.notifier).reloadState();
     // Update queue
-    state = state.update();
+    state = state?.update();
 
     // Run queue again
     runQueue();
@@ -211,7 +226,7 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
     FlutterProject project,
     String version,
   ) async {
-    i18next = I18Next.of(context);
+    i18next = I18Next.of(context)!;
     await FVMClient.pinVersion(project, version);
     await ref.read(projectsProvider.notifier).reload(project);
     notify(
@@ -228,11 +243,11 @@ class FvmQueueState extends StateNotifier<FvmQueue> {
   Future<void> _addToQueue(
     BuildContext context,
     ReleaseDto version, {
-    QueueAction action,
+    QueueAction? action,
   }) async {
-    i18next = I18Next.of(context);
-    state.queue.add(QueueItem(version: version, action: action));
-    state = state.update();
+    i18next = I18Next.of(context)!;
+    state?.queue.add(QueueItem(version: version, action: action));
+    state = state?.update();
     runQueue();
   }
 }

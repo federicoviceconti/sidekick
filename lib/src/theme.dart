@@ -32,10 +32,10 @@ ThemeData get darkTheme {
 
 /// Dark theme
 ThemeData _customThemeBuilder({
-  Color cardColor,
-  Color scaffoldBackgroundColor,
-  Color primarySwatch,
-  Color accentColor,
+  Color? cardColor,
+  Color? scaffoldBackgroundColor,
+  MaterialColor? primarySwatch,
+  Color? accentColor,
   Brightness brightness = Brightness.dark,
 }) {
   ThemeData baseTheme;
@@ -60,7 +60,7 @@ ThemeData _customThemeBuilder({
         primary: Colors.grey,
         backgroundColor: Colors.grey[850],
         side: BorderSide(
-          color: Colors.grey[800],
+          color: Colors.grey[800]!,
         ),
       ),
     ),

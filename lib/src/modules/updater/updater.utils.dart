@@ -23,7 +23,7 @@ String getLatestRelease(String release) {
 Future<File> getDownloadFileLocation(String release) async {
   final downloadDir = await getDownloadsDirectory();
   final filePath = p.join(
-    downloadDir.absolute.path,
+    downloadDir?.absolute.path ?? '',
     'sidekick-$release.$_platformExt',
   );
   return File(filePath);
@@ -32,23 +32,12 @@ Future<File> getDownloadFileLocation(String release) async {
 String get _platformExt {
   switch (_platform) {
     case 'windows':
-      {
-        return 'msix';
-      }
-      break;
+      return 'msix';
     case 'macos':
-      {
-        return 'dmg';
-      }
-      break;
+      return 'dmg';
     case 'linux':
-      {
-        return 'AppImage';
-      }
+      return 'AppImage';
     default:
-      {
-        return 'zip';
-      }
-      break;
+      return 'zip';
   }
 }

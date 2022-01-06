@@ -5,7 +5,7 @@ import 'package:i18next/i18next.dart';
 class SliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   /// Constructor
   SliverHeaderDelegate({
-    this.title,
+    required this.title,
     this.count = 0,
     this.onPress,
     this.height = 60,
@@ -18,7 +18,7 @@ class SliverHeaderDelegate extends SliverPersistentHeaderDelegate {
   final int count;
 
   /// On press handler
-  final Function onPress;
+  final void Function()? onPress;
 
   /// height
   final double height;
@@ -40,7 +40,7 @@ class SliverHeaderDelegate extends SliverPersistentHeaderDelegate {
           title,
         ),
         trailing: Text(
-          I18Next.of(context).t('components:atoms.countFound', variables: {
+          I18Next.of(context)!.t('components:atoms.countFound', variables: {
             'count': count,
           }),
         ),

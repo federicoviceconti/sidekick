@@ -12,9 +12,9 @@ import '../project.dto.dart';
 class ProjectReleaseSelect extends StatelessWidget {
   /// Constructor
   const ProjectReleaseSelect({
-    @required this.project,
-    @required this.releases,
-    Key key,
+    required this.project,
+    required this.releases,
+    Key? key,
   }) : super(key: key);
 
   /// Project
@@ -27,7 +27,7 @@ class ProjectReleaseSelect extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
         tooltip: I18Next.of(context)
-            .t('modules:projects.components.selectAFlutterSdkVersion'),
+            !.t('modules:projects.components.selectAFlutterSdkVersion'),
 
         // elevation: 1,
         padding: EdgeInsets.zero,
@@ -59,8 +59,8 @@ class ProjectReleaseSelect extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               project.pinnedVersion != null
-                  ? Caption(project.pinnedVersion)
-                  : Caption(I18Next.of(context).t('modules:projects.choose')),
+                  ? Caption(project.pinnedVersion ?? '')
+                  : Caption(I18Next.of(context)!.t('modules:projects.choose')),
               // const SizedBox(width: 20),
               const Icon(MdiIcons.menuDown),
             ],

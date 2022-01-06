@@ -10,7 +10,7 @@ import '../../selected_detail/selected_detail.provider.dart';
 /// Channel showcase widget
 class ChannelShowcaseItem extends StatelessWidget {
   /// Constructor
-  const ChannelShowcaseItem(this.channel, {Key key}) : super(key: key);
+  const ChannelShowcaseItem(this.channel, {Key? key}) : super(key: key);
 
   /// Channel
   final ChannelDto channel;
@@ -34,14 +34,14 @@ class ChannelShowcaseItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Heading(channel.name),
-                  Subheading(channel.release.version),
+                  Subheading(channel.release?.version ?? ''),
                   const SizedBox(height: 5),
-                  Caption(
-                    DateTimeFormat.relative(
-                      channel.release.releaseDate,
-                      appendIfAfter: 'ago',
-                    ),
-                  ),
+                  channel.release != null
+                      ? Caption(
+                        DateTimeFormat.relative(
+                        channel.release!.releaseDate,
+                        appendIfAfter: 'ago'))
+                      : IgnorePointer(),
                 ],
               ),
               const Spacer(),

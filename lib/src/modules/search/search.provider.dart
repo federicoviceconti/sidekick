@@ -107,10 +107,10 @@ final searchResultsProvider = Provider((ref) {
       // Get projec pinnedVersion
       final pinnedVersion = project.pinnedVersion ?? '';
       // Add project if name or pinnedVersion start with term
-      if (project.name.toLowerCase().startsWith(term) ||
+      if (project.name != null && project.name!.toLowerCase().startsWith(term) ||
           pinnedVersion.startsWith(term)) {
         // Add to track unique insertions
-        uniques[project.name] = true;
+        uniques[project.name!] = true;
 
         projectResults.add(project);
       }
@@ -118,7 +118,7 @@ final searchResultsProvider = Provider((ref) {
 
     // Look through the releases to see if
     // query matches release names
-    for (final release in releaseState.versions) {
+    for (final release in releaseState.versions ?? []) {
       // Get channel name to pass to map
       final channelName = release.release.channelName;
 
@@ -153,7 +153,7 @@ final searchResultsProvider = Provider((ref) {
     }
 
     //Loop channels
-    for (final channel in releaseState.channels) {
+    for (final channel in releaseState.channels ?? []) {
       // Only unique results
       if (uniques[channel.name] == true) break;
 

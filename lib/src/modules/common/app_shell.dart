@@ -31,7 +31,7 @@ const pages = [
 /// Main widget of the app
 class AppShell extends HookWidget {
   /// Constructor
-  const AppShell({Key key}) : super(key: key);
+  const AppShell({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +44,24 @@ class AppShell extends HookWidget {
     final selectedIndex = useState(0);
 
     // Side effect when route changes
-    useValueChanged(currentRoute, (_, __) {
+    useValueChanged<NavigationRoutes?, NavigationRoutes?>(currentRoute, (_, __) {
       // Do not set index if its search
-      if (currentRoute != NavigationRoutes.searchScreen) {
+      if (currentRoute != null &&
+          currentRoute != NavigationRoutes.searchScreen) {
         selectedIndex.value = currentRoute.index;
       }
     });
 
     // Side effect when info is selected
-    useValueChanged(selectedInfo, (_, __) {
+    useValueChanged<SelectedDetail?, SelectedDetail?>(selectedInfo, (_, __) {
       if (_scaffoldKey.currentState == null) return;
-      final isOpen = _scaffoldKey.currentState.isEndDrawerOpen;
+      final isOpen = _scaffoldKey.currentState!.isEndDrawerOpen;
       final hasInfo = selectedInfo?.release != null;
 
       // Open drawer if not large layout and its not open
       if (hasInfo && !isOpen) {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          _scaffoldKey.currentState.openEndDrawer();
+        SchedulerBinding.instance?.addPostFrameCallback((_) {
+          _scaffoldKey.currentState!.openEndDrawer();
         });
       }
     });
@@ -97,15 +98,15 @@ class AppShell extends HookWidget {
               },
               destinations: [
                 renderNavButton(
-                  I18Next.of(context).t('modules:common.navButtonDashboard'),
+                  I18Next.of(context)!.t('modules:common.navButtonDashboard'),
                   Icons.category,
                 ),
                 renderNavButton(
-                  I18Next.of(context).t('modules:common.navButtonProjects'),
+                  I18Next.of(context)!.t('modules:common.navButtonProjects'),
                   MdiIcons.folderMultiple,
                 ),
                 renderNavButton(
-                  I18Next.of(context).t('modules:common.navButtonExplore'),
+                  I18Next.of(context)!.t('modules:common.navButtonExplore'),
                   Icons.explore,
                 ),
               ],
@@ -127,7 +128,7 @@ class AppShell extends HookWidget {
                             child: PageTransitionSwitcher(
                               duration: const Duration(milliseconds: 250),
                               reverse: selectedIndex.value <
-                                  (navigation.previous.index ?? 0),
+                                  (navigation.previous?.index ?? 0),
                               transitionBuilder: (
                                 child,
                                 animation,

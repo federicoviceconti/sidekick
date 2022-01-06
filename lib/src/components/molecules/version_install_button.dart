@@ -4,39 +4,38 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:collection/collection.dart';
 
 import '../../modules/common/dto/release.dto.dart';
 import '../../modules/fvm/fvm_queue.provider.dart';
 
 class VersionInstallButton extends HookWidget {
-  final ReleaseDto version;
+  final ReleaseDto? version;
   final bool warningIcon;
-  const VersionInstallButton(this.version, {this.warningIcon = false, Key key})
+  const VersionInstallButton(this.version, {this.warningIcon = false, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final installedMsg =
-        I18Next.of(context).t('components:molecules.versionIsInstalled');
+        I18Next.of(context)!.t('components:molecules.versionIsInstalled');
     final notInstalledMsg = I18Next.of(context)
-        .t('components:molecules.versionNotInstalledClickToInstall');
+        !.t('components:molecules.versionNotInstalledClickToInstall');
     final isQueued = useState(false);
     final hovering = useState(false);
     final queueProvider = useProvider(fvmQueueProvider);
 
     useEffect(() {
-      final isInstalling = queueProvider.activeItem != null &&
-          queueProvider.activeItem.version == version;
+      final isInstalling = queueProvider?.activeItem != null &&
+          queueProvider?.activeItem?.version == version;
 
       if (isInstalling) {
         isQueued.value = true;
         return;
       }
 
-      final queued = queueProvider.queue.firstWhere(
-        (item) => item.version == version,
-        orElse: () => null,
-      );
+      final queued = queueProvider?.queue.firstWhereOrNull(
+              (item) => item.version == version);
 
       isQueued.value = queued != null;
       return;
@@ -45,11 +44,13 @@ class VersionInstallButton extends HookWidget {
     Future<void> onInstall() async {
       isQueued.value = true;
       // Add it to queue for installation
-      context.read(fvmQueueProvider.notifier).install(context, version);
+      if(version != null) {
+        context.read(fvmQueueProvider.notifier).install(context, version!);
+      }
     }
 
     Widget installIcon() {
-      if ((isQueued.value && !version.isCached)) {
+      if ((isQueued.value && version != null && !version!.isCached)) {
         return SizedBox(
           height: 20,
           width: 20,
@@ -60,7 +61,7 @@ class VersionInstallButton extends HookWidget {
         );
       }
 
-      if (version.isCached) {
+      if (version?.isCached ?? false) {
         return Icon(
           Icons.check,
           size: 20,

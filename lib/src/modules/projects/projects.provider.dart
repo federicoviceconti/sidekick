@@ -13,7 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:fvm/fvm.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
-
+import 'package:collection/collection.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import '../../modules/common/utils/notify.dart';
@@ -68,7 +68,8 @@ class ProjectsStateNotifier extends StateNotifier<List<FlutterProject>> {
     /// Do migration
     await _migrate();
 
-    state = await ProjectsService.load();
+    final projectLoaded = await ProjectsService.load();
+    state = projectLoaded.whereNotNull().toList();
   }
 
   /// Reloads one project
@@ -89,7 +90,7 @@ class ProjectsStateNotifier extends StateNotifier<List<FlutterProject>> {
       await ProjectsService.box.put(path, ref);
       await load();
     } else {
-      notify(I18Next.of(context).t('modules:projects.notAFlutterProject'));
+      notify(I18Next.of(context)!.t('modules:projects.notAFlutterProject'));
     }
   }
 

@@ -7,11 +7,12 @@ import 'sandbox.provider.dart';
 
 class ProcessCmd {
   final List<String> args;
-  final String execPath;
-  final String workingDirectory;
-  final SendPort sendPort;
+  final String? execPath;
+  final String? workingDirectory;
+  final SendPort? sendPort;
+
   ProcessCmd({
-    this.args,
+    this.args = const [],
     this.execPath,
     this.workingDirectory,
     this.sendPort,
@@ -21,7 +22,7 @@ class ProcessCmd {
 Future<void> isolateProcess(ProcessCmd cmd) async {
   try {
     final process = await Process.start(
-      cmd.execPath,
+      cmd.execPath!,
       cmd.args,
       workingDirectory: cmd.workingDirectory,
     );
@@ -33,7 +34,7 @@ Future<void> isolateProcess(ProcessCmd cmd) async {
         )
         .listen(
       (event) {
-        cmd.sendPort.send(
+        cmd.sendPort!.send(
           ConsoleLine.stdout(event),
         );
       },
@@ -46,7 +47,7 @@ Future<void> isolateProcess(ProcessCmd cmd) async {
         )
         .listen(
       (event) {
-        cmd.sendPort.send(
+        cmd.sendPort!.send(
           ConsoleLine.stderr(event),
         );
       },
@@ -55,9 +56,9 @@ Future<void> isolateProcess(ProcessCmd cmd) async {
     await process.exitCode;
 
     // Trigger close receive port
-    cmd.sendPort.send(ConsoleLine.close());
+    cmd.sendPort!.send(ConsoleLine.close());
   } on Exception catch (e) {
-    cmd.sendPort.send(
+    cmd.sendPort!.send(
       ConsoleLine(
         text: e.toString(),
         type: OutputType.stderr,

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 /// Scans [rootDir] for a certain condition
 Future<List<FileSystemEntity>> scanDirectoryForCondition({
-  @required bool Function(FileSystemEntity) condition,
-  @required Directory rootDir,
+  required bool Function(FileSystemEntity) condition,
+  required Directory rootDir,
 }) async {
   assert(condition != null);
   assert(rootDir != null);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fvm/fvm.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:open_file/open_file.dart';
+import 'package:sidekick/src/modules/projects/project.dto.dart';
 
 import '../../../components/atoms/typography.dart';
 import '../projects.provider.dart';
@@ -22,16 +22,16 @@ class ProjectActions extends StatelessWidget {
   /// Constructor
   const ProjectActions(
     this.project, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Project
-  final Project project;
+  final FlutterProject project;
 
   /// Render menu button
   Widget renderMenuButton({
-    IconData icon,
-    String label,
+    required IconData icon,
+    required String label,
   }) {
     return Row(
       children: [
@@ -49,14 +49,14 @@ class ProjectActions extends StatelessWidget {
       PopupMenuItem(
         value: ProjectActionOptions.openDirectory,
         child: renderMenuButton(
-          label: I18Next.of(context).t('modules:projects.components.open'),
+          label: I18Next.of(context)!.t('modules:projects.components.open'),
           icon: MdiIcons.openInNew,
         ),
       ),
       PopupMenuItem(
         value: ProjectActionOptions.remove,
         child: renderMenuButton(
-          label: I18Next.of(context).t('modules:projects.components.remove'),
+          label: I18Next.of(context)!.t('modules:projects.components.remove'),
           icon: MdiIcons.delete,
         ),
       ),

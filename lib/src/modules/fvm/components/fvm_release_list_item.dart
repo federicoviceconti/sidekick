@@ -16,7 +16,7 @@ class FvmReleaseListItem extends StatelessWidget {
   /// Constructor
   const FvmReleaseListItem(
     this.release, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Release
@@ -35,7 +35,7 @@ class FvmReleaseListItem extends StatelessWidget {
           release.isGlobal
               ? ActionChip(
                   label: Caption(
-                      I18Next.of(context).t('modules:fvm.components.global')),
+                      I18Next.of(context)!.t('modules:fvm.components.global')),
                   avatar: const Icon(MdiIcons.information, size: 20),
                   onPressed: () {
                     showGlobalInfoDialog(context);

@@ -6,24 +6,24 @@ class SkListTile extends StatelessWidget {
   final Widget title;
 
   /// Subitle
-  final Widget subtitle;
+  final Widget? subtitle;
 
   /// Trailing widget
-  final Widget trailing;
+  final Widget? trailing;
 
   /// Leading widget
-  final Widget leading;
+  final Widget? leading;
 
   /// On tap handler
-  final Function() onTap;
+  final void Function()? onTap;
 
   /// Is it seleccted
   final bool selected;
 
   /// Constructor
   const SkListTile({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.subtitle,
     this.leading,
     this.trailing,

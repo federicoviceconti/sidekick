@@ -11,24 +11,26 @@ class SetupButton extends StatelessWidget {
   /// Constructor
   const SetupButton({
     this.release,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Release
-  final ReleaseDto release;
+  final ReleaseDto? release;
 
   @override
   Widget build(BuildContext context) {
     return Tooltip(
       message: I18Next.of(context)
-          .t('modules:fvm.components.sdkHasNotFinishedSetup'),
+          !.t('modules:fvm.components.sdkHasNotFinishedSetup'),
       child: IconButton(
         icon: const Icon(MdiIcons.alert),
         iconSize: 20,
         splashRadius: 20,
         color: Theme.of(context).colorScheme.secondary,
         onPressed: () {
-          context.read(fvmQueueProvider.notifier).setup(context, release);
+          if(release != null) {
+            context.read(fvmQueueProvider.notifier).setup(context, release!);
+          }
         },
       ),
     );

@@ -11,7 +11,7 @@ import '../../fvm/components/fvm_setup_button.dart';
 
 class ReferenceInfoTile extends StatelessWidget {
   final ReleaseDto version;
-  const ReferenceInfoTile(this.version, {Key key}) : super(key: key);
+  const ReferenceInfoTile(this.version, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +21,13 @@ class ReferenceInfoTile extends StatelessWidget {
         children: [
           SkListTile(
             title: Text(I18Next.of(context)
-                .t('modules:selectedDetail.components.channel')),
-            trailing: Chip(label: Text(version.release.channelName)),
+                !.t('modules:selectedDetail.components.channel')),
+            trailing: Chip(label: Text(version.release?.channelName ?? '')),
           ),
           const Divider(),
           SkListTile(
             title: Text(I18Next.of(context)
-                .t('modules:selectedDetail.components.releaseNotes')),
+                !.t('modules:selectedDetail.components.releaseNotes')),
             trailing: IconButton(
               icon: const Icon(
                 Icons.open_in_new,
@@ -47,12 +47,12 @@ class ReferenceInfoTile extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-          child: Paragraph(channelDescriptions(context)[version.name]),
+          child: Paragraph(channelDescriptions(context)[version.name] ?? ''),
         ),
         const Divider(height: 0),
         SkListTile(
           title: Text(I18Next.of(context)
-              .t('modules:selectedDetail.components.version')),
+              !.t('modules:selectedDetail.components.version')),
           trailing: channel.sdkVersion != null
               ? Chip(label: Text(channel.sdkVersion ?? ''))
               : SetupButton(release: channel),

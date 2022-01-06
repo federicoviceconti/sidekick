@@ -6,11 +6,11 @@ import 'updater.service.dart';
 
 /// Updater provider
 final updaterProvider =
-    StateNotifierProvider<UpdaterStateNotifier, SidekickUpdateInfo>(
+    StateNotifierProvider<UpdaterStateNotifier, SidekickUpdateInfo?>(
         (_) => UpdaterStateNotifier());
 
 /// Update state notifier
-class UpdaterStateNotifier extends StateNotifier<SidekickUpdateInfo> {
+class UpdaterStateNotifier extends StateNotifier<SidekickUpdateInfo?> {
   /// COnstructor
   UpdaterStateNotifier() : super(SidekickUpdateInfo.notReady()) {
     checkLatest();
@@ -19,18 +19,18 @@ class UpdaterStateNotifier extends StateNotifier<SidekickUpdateInfo> {
   /// Check for latest release
   Future<void> checkLatest() async {
     state = await UpdaterService.checkLatestRelease();
-    if (state.needUpdate && !state.isInstalled) {
+    if (state != null && state!.needUpdate && !state!.isInstalled) {
       await download();
     }
   }
 
   /// Download latest release
   Future<void> download() async {
-    state = await UpdaterService.downloadRelease(state);
+    if(state != null) state = await UpdaterService.downloadRelease(state!);
   }
 
   /// Opens installer
   Future<void> openInstaller(BuildContext context) async {
-    await UpdaterService.openInstaller(context, state);
+    if(state != null) await UpdaterService.openInstaller(context, state!);
   }
 }

@@ -17,7 +17,7 @@ Future<void> showGlobalInfoDialog(BuildContext context) async {
       builder: (context) {
         return AlertDialog(
           title: Heading(
-            I18Next.of(context).t('modules:fvm.dialogs.globalConfiguration'),
+            I18Next.of(context)!.t('modules:fvm.dialogs.globalConfiguration'),
           ),
           actions: <Widget>[
             TextButton(
@@ -28,7 +28,7 @@ Future<void> showGlobalInfoDialog(BuildContext context) async {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text(I18Next.of(context).t('modules:fvm.dialogs.ok')),
+              child: Text(I18Next.of(context)!.t('modules:fvm.dialogs.ok')),
             ),
           ],
           content: Container(
@@ -38,7 +38,7 @@ Future<void> showGlobalInfoDialog(BuildContext context) async {
               children: [
                 Subheading(
                   I18Next.of(context)
-                      .t('modules:fvm.dialogs.flutterPathIsPointingOn'),
+                      !.t('modules:fvm.dialogs.flutterPathIsPointingOn'),
                 ),
                 Caption('${configured.currentPath}.\n\n'),
                 !configured.isSetup
@@ -46,8 +46,8 @@ Future<void> showGlobalInfoDialog(BuildContext context) async {
                         children: [
                           Subheading(
                             I18Next.of(context)
-                                    .t('modules:fvm.dialogs.changeThePathTo') +
-                                I18Next.of(context).t(
+                                    !.t('modules:fvm.dialogs.changeThePathTo') +
+                                I18Next.of(context)!.t(
                                     'modules:fvm.dialogs.ifYouWantToFlutterSdkThroughFvm'),
                           ),
                           Row(
@@ -71,7 +71,7 @@ Future<void> showGlobalInfoDialog(BuildContext context) async {
                   icon: const Icon(MdiIcons.informationOutline),
                   label: Text(
                     I18Next.of(context)
-                        .t('modules:fvm.dialogs.howToUpdateYourPath'),
+                        !.t('modules:fvm.dialogs.howToUpdateYourPath'),
                   ),
                 )
               ],

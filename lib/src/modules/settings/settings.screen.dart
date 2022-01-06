@@ -50,7 +50,7 @@ class SettingsScreen extends HookWidget {
     final controller = usePageController(initialPage: section.index);
 
     final _sections = [
-      I18Next.of(context).t('modules:settings.scenes.general'),
+      I18Next.of(context)!.t('modules:settings.scenes.general'),
       'FVM',
       'Flutter'
     ];
@@ -67,10 +67,10 @@ class SettingsScreen extends HookWidget {
     Future<void> handleSave() async {
       try {
         await provider.save(settings);
-        notify(I18Next.of(context).t('modules:settings.settingsHaveBeenSaved'));
+        notify(I18Next.of(context)!.t('modules:settings.settingsHaveBeenSaved'));
       } on Exception catch (e) {
         notifyError(
-            I18Next.of(context).t('modules:settings.couldNotSaveSettings'));
+            I18Next.of(context)!.t('modules:settings.couldNotSaveSettings'));
         notifyError(e.toString());
       }
     }

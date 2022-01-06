@@ -6,7 +6,7 @@ import '../../../components/atoms/empty_dataset.dart';
 import '../../navigation/navigation.provider.dart';
 
 class EmptyVersions extends StatelessWidget {
-  const EmptyVersions({Key key}) : super(key: key);
+  const EmptyVersions({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +19,14 @@ class EmptyVersions extends StatelessWidget {
           children: [
             Text(
               I18Next.of(context)
-                  .t('modules:fvm.components.flutterSdkNotInstalled'),
+                  !.t('modules:fvm.components.flutterSdkNotInstalled'),
               style: Theme.of(context).textTheme.headline5,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             Text(
               I18Next.of(context)
-                  .t('modules:fvm.components.noFlutterVersionInstalledMessage'),
+                  !.t('modules:fvm.components.noFlutterVersionInstalledMessage'),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.caption,
             ),
@@ -44,7 +44,7 @@ class EmptyVersions extends StatelessWidget {
               icon: const Icon(Icons.explore),
               label: Text(
                 I18Next.of(context)
-                    .t('modules:fvm.components.exploreFlutterReleases'),
+                    !.t('modules:fvm.components.exploreFlutterReleases'),
               ),
             )
           ],

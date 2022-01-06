@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:fvm/fvm.dart';
 import 'package:hive/hive.dart';
 import 'package:pubspec_parse/pubspec_parse.dart';
@@ -9,10 +8,10 @@ import 'package:pubspec_parse/pubspec_parse.dart';
 class FlutterProject extends Project {
   /// Project constructor
   FlutterProject._({
-    @required String name,
-    @required FvmConfig config,
-    @required Directory projectDir,
-    @required this.pubspec,
+    required String? name,
+    required FvmConfig config,
+    required Directory projectDir,
+    required this.pubspec,
     this.invalid = false,
   }) : super(
           name: name,
@@ -46,11 +45,11 @@ class FlutterProject extends Project {
   }
 
   /// Pubspec
-  final Pubspec pubspec;
+  final Pubspec? pubspec;
 
   /// Project description
   String get description {
-    return pubspec.description ?? '';
+    return pubspec?.description ?? '';
   }
 }
 
@@ -58,8 +57,8 @@ class FlutterProject extends Project {
 class ProjectRef {
   /// Constructor
   const ProjectRef({
-    @required this.name,
-    @required this.path,
+    required this.name,
+    required this.path,
   });
 
   /// Project name
@@ -71,8 +70,8 @@ class ProjectRef {
   /// Creates a project path from map
   factory ProjectRef.fromMap(Map<String, String> map) {
     return ProjectRef(
-      name: map['name'],
-      path: map['path'],
+      name: map['name']!,
+      path: map['path']!,
     );
   }
 
