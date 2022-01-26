@@ -87,7 +87,7 @@ class AppShell extends HookWidget {
         key: _scaffoldKey,
         body: Row(
           children: [
-            NavigationRail(
+            currentRoute != NavigationRoutes.searchScreen ? NavigationRail(
               backgroundColor: platformBackgroundColor(context),
               selectedIndex: selectedIndex.value,
               minWidth: kNavigationWidth,
@@ -110,7 +110,7 @@ class AppShell extends HookWidget {
                   Icons.explore,
                 ),
               ],
-            ),
+            ) : IgnorePointer(),
             const VerticalDivider(
               thickness: 1,
               width: 1,
