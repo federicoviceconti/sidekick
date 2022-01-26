@@ -16,16 +16,16 @@ import '../sandbox.provider.dart';
 class SandboxConsole extends HookWidget {
   /// Constructor
   const SandboxConsole({
-    this.project,
-    this.release,
-    Key key,
+    required this.project,
+    required this.release,
+    Key? key,
   }) : super(key: key);
 
   /// Project
   final Project project;
 
   /// Release
-  final ReleaseDto release;
+  final ReleaseDto? release;
   @override
   Widget build(BuildContext context) {
     final terminalState = useProvider(sandboxProvider);
@@ -65,7 +65,7 @@ class SandboxConsole extends HookWidget {
 
     useEffect(() {
       /// Cannot modify state before render
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
+      WidgetsBinding.instance?.addPostFrameCallback((_) async {
         await terminal.reboot(release, project);
       });
       return;
@@ -101,7 +101,7 @@ class SandboxConsole extends HookWidget {
       currentCmdIdx.value = nextIdx;
 
       // Trigger cursor move post frame
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
+      WidgetsBinding.instance?.addPostFrameCallback((_) async {
         textController.selection = TextSelection.collapsed(
           offset: textController.text.length,
         );

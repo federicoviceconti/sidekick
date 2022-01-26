@@ -29,7 +29,7 @@ class FvmReleaseActions extends StatelessWidget {
   /// Constructor
   const FvmReleaseActions(
     this.release, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Release
@@ -37,8 +37,8 @@ class FvmReleaseActions extends StatelessWidget {
 
   /// Render menu button
   Widget renderMenuButton({
-    IconData icon,
-    String label,
+    required IconData icon,
+    required String label,
   }) {
     return Row(
       children: [
@@ -56,7 +56,7 @@ class FvmReleaseActions extends StatelessWidget {
       PopupMenuItem(
         value: FvmReleaseActionOptions.global,
         child: renderMenuButton(
-          label: I18Next.of(context).t('modules:fvm.components.setAsGlobal'),
+          label: I18Next.of(context)!.t('modules:fvm.components.setAsGlobal'),
           icon: MdiIcons.earth,
         ),
       ),
@@ -64,14 +64,14 @@ class FvmReleaseActions extends StatelessWidget {
         value: FvmReleaseActionOptions.detail,
         child: renderMenuButton(
           label:
-              I18Next.of(context).t('modules:pubPackages.components.details'),
+              I18Next.of(context)!.t('modules:pubPackages.components.details'),
           icon: MdiIcons.information,
         ),
       ),
       PopupMenuItem(
         value: FvmReleaseActionOptions.remove,
         child: renderMenuButton(
-          label: I18Next.of(context).t('modules:projects.components.remove'),
+          label: I18Next.of(context)!.t('modules:projects.components.remove'),
           icon: MdiIcons.delete,
         ),
       ),
@@ -84,7 +84,7 @@ class FvmReleaseActions extends StatelessWidget {
         PopupMenuItem(
           value: FvmReleaseActionOptions.upgrade,
           child: renderMenuButton(
-            label: I18Next.of(context).t('modules:fvm.components.upgrade'),
+            label: I18Next.of(context)!.t('modules:fvm.components.upgrade'),
             icon: MdiIcons.update,
           ),
         ),

@@ -6,13 +6,13 @@ import '../../modules/fvm/fvm_queue.provider.dart';
 import '../atoms/console.dart';
 
 class AppBottomBar extends HookWidget {
-  const AppBottomBar({Key key}) : super(key: key);
+  const AppBottomBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final actions = useProvider(fvmQueueProvider);
     final expand = useState(false);
-    final processing = actions.activeItem != null;
+    final processing = actions?.activeItem != null;
     void toggleExpand() {
       expand.value = !expand.value;
     }
@@ -31,7 +31,7 @@ class AppBottomBar extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          actions.activeItem != null
+          actions?.activeItem != null
               ? const LinearProgressIndicator(minHeight: 1)
               : const Divider(height: 1),
           Expanded(

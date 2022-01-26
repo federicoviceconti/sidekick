@@ -19,14 +19,14 @@ class EmptyProjects extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              I18Next.of(context).t(
+              I18Next.of(context)!.t(
                   'modules:projects.components.noFlutterProjectsHaveBeenAddedYet'),
               style: Theme.of(context).textTheme.headline6,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             Text(
-              I18Next.of(context).t(
+              I18Next.of(context)!.t(
                   'modules:projects.components.addYourFlutterProjectProjectsInformationWillBeDisplayedHere'),
               style: Theme.of(context).textTheme.caption,
               textAlign: TextAlign.center,

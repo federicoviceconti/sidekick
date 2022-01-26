@@ -5,10 +5,10 @@ import 'package:fvm/fvm.dart';
 abstract class ReleaseDto {
   /// Constructor
   ReleaseDto({
-    @required this.name,
-    @required this.release,
-    @required this.needSetup,
-    @required this.cache,
+    required this.name,
+    required this.release,
+    required this.needSetup,
+    this.cache,
     this.isChannel = false,
     this.isGlobal = false,
   });
@@ -17,10 +17,10 @@ abstract class ReleaseDto {
   final String name;
 
   /// Release
-  Release release;
+  Release? release;
 
   /// Cached release
-  CacheVersion cache;
+  CacheVersion? cache;
 
   /// If needs setup
   bool needSetup;

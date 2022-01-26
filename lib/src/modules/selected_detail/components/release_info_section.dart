@@ -8,7 +8,7 @@ import 'advanced_info_tile.dart';
 
 class ReleaseInfoSection extends StatelessWidget {
   final ReleaseDto version;
-  const ReleaseInfoSection(this.version, {Key key}) : super(key: key);
+  const ReleaseInfoSection(this.version, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,9 @@ class ReleaseInfoSection extends StatelessWidget {
       children: [
         SkListTile(
           title: Text(I18Next.of(context)
-              .t('modules:selectedDetail.components.releaseDate')),
+              !.t('modules:selectedDetail.components.releaseDate')),
           trailing: Text(DateTimeFormat.format(
-            version.release.releaseDate,
+            version.release!.releaseDate,
             format: AmericanDateFormats.abbr,
           )),
         ),

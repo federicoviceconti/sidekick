@@ -20,7 +20,7 @@ import 'projects.provider.dart';
 /// Projects screen
 class ProjectsScreen extends HookWidget {
   /// Constructor
-  const ProjectsScreen({Key key}) : super(key: key);
+  const ProjectsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +33,13 @@ class ProjectsScreen extends HookWidget {
     Future<void> onRefresh() async {
       await context.read(projectsProvider.notifier).load();
       notify(
-        I18Next.of(context).t('modules:projects.projectsRefreshed'),
+        I18Next.of(context)!.t('modules:projects.projectsRefreshed'),
       );
     }
 
     Future<void> handleChooseDirectory() async {
       final directoryPath = await selector.getDirectoryPath(
-        confirmButtonText: I18Next.of(context).t('modules:projects.choose'),
+        confirmButtonText: I18Next.of(context)!.t('modules:projects.choose'),
       );
       if (directoryPath == null) {
         // Operation was canceled by the user.
@@ -59,10 +59,10 @@ class ProjectsScreen extends HookWidget {
     }, [projects, settings.sidekick]);
 
     return SkScreen(
-      title: I18Next.of(context).t('modules:projects.projects'),
+      title: I18Next.of(context)!.t('modules:projects.projects'),
       actions: [
         Caption(
-          I18Next.of(context).t(
+          I18Next.of(context)!.t(
             'modules:projects.projectsProjects',
             variables: {
               'projects': projects.length,
@@ -72,9 +72,9 @@ class ProjectsScreen extends HookWidget {
         const SizedBox(width: 10),
         Tooltip(
           message: I18Next.of(context)
-              .t('modules:projects.onlyDisplayProjectsThatHaveVersionsPinned'),
+              !.t('modules:projects.onlyDisplayProjectsThatHaveVersionsPinned'),
           child: SkCheckBox(
-            label: I18Next.of(context).t('modules:projects.fvmOnly'),
+            label: I18Next.of(context)!.t('modules:projects.fvmOnly'),
             value: settings.sidekick.onlyProjectsWithFvm,
             onChanged: (value) {
               settings.sidekick.onlyProjectsWithFvm = value;
@@ -90,7 +90,7 @@ class ProjectsScreen extends HookWidget {
         OutlinedButton.icon(
           onPressed: handleChooseDirectory,
           icon: Icon(MdiIcons.plus),
-          label: Text(I18Next.of(context).t('modules:projects.addProject')),
+          label: Text(I18Next.of(context)!.t('modules:projects.addProject')),
         ),
       ],
       child: projects.isEmpty

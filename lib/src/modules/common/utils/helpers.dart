@@ -34,7 +34,7 @@ extension ExtendedIterable<E> on Iterable<E> {
 /// Returns a temp `Directory` for sidekick
 /// If [subDirectory] is provided it will add to the path
 Future<Directory> getSidekickTempDir({
-  Directory subDirectory,
+  Directory? subDirectory,
 }) async {
   final rootTempDir = await getTemporaryDirectory();
   final appTempDir = Directory(path.join(rootTempDir.path, kAppBundleId));

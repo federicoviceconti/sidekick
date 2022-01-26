@@ -6,17 +6,17 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class SkCheckBox extends HookWidget {
   /// Constructor
   const SkCheckBox({
-    this.label,
-    this.value,
+    required this.label,
+    required this.value,
     this.onChanged,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Current value of checkbox
   final bool value;
 
   /// On change handler
-  final Function(bool) onChanged;
+  final Function(bool)? onChanged;
 
   /// Button label
   final String label;
@@ -37,7 +37,7 @@ class SkCheckBox extends HookWidget {
       icon: renderIcon(),
       onPressed: () {
         active.value = !active.value;
-        onChanged(active.value);
+        onChanged?.call(active.value);
       },
     );
   }

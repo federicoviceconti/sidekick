@@ -16,8 +16,8 @@ import 'sandbox.provider.dart';
 class SandboxScreen extends HookWidget {
   /// Constructor
   const SandboxScreen({
-    this.project,
-    Key key,
+    required this.project,
+    Key? key,
   }) : super(key: key);
 
   /// Project
@@ -29,7 +29,7 @@ class SandboxScreen extends HookWidget {
     final terminal = useProvider(sandboxProvider.notifier);
     final processing = useProvider(sandboxProvider).processing;
 
-    final selectedRelease = useState<ReleaseDto>(null);
+    final selectedRelease = useState<ReleaseDto?>(null);
 
     useEffect(() {
       if (selectedRelease.value == null && releases.all.isNotEmpty) {
@@ -46,7 +46,7 @@ class SandboxScreen extends HookWidget {
           children: [
             const Icon(MdiIcons.playBox),
             const SizedBox(width: 10),
-            Subheading(I18Next.of(context).t('modules:sandbox.playground')),
+            Subheading(I18Next.of(context)!.t('modules:sandbox.playground')),
           ],
         ),
         centerTitle: true,
@@ -81,9 +81,9 @@ class SandboxScreen extends HookWidget {
                 ListTile(
                   dense: true,
                   title:
-                      Text(I18Next.of(context).t('modules:releases.releases')),
+                      Text(I18Next.of(context)!.t('modules:releases.releases')),
                   subtitle: Text(
-                    I18Next.of(context).t(
+                    I18Next.of(context)!.t(
                       'modules:sandbox.releasesVersions',
                       variables: {
                         'releases': releases.all.length,
@@ -152,7 +152,7 @@ class SandboxScreen extends HookWidget {
               children: [
                 ListTile(
                   dense: true,
-                  title: Text(project.name),
+                  title: Text(project.name ?? ''),
                   subtitle: Text(project.projectDir.path),
                   trailing: processing
                       ? OutlinedButton(
@@ -166,13 +166,13 @@ class SandboxScreen extends HookWidget {
                             terminal.endProcess();
                           },
                           child: Text(
-                            I18Next.of(context).t('modules:fvm.dialogs.cancel'),
+                            I18Next.of(context)!.t('modules:fvm.dialogs.cancel'),
                           ),
                         )
                       : OutlinedButton(
                           onPressed: null,
                           child: Text(I18Next.of(context)
-                              .t('modules:sandbox.notRunning')),
+                              !.t('modules:sandbox.notRunning')),
                         ),
                 ),
                 const Divider(height: 1),

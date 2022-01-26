@@ -9,7 +9,7 @@ class FvmSettingsScene extends StatelessWidget {
   const FvmSettingsScene(
     this.settings,
     this.onSave, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Settings
@@ -28,12 +28,12 @@ class FvmSettingsScene extends StatelessWidget {
           const SizedBox(height: 20),
           SwitchListTile(
             title: Text(I18Next.of(context)
-                .t('modules:settings.scenes.skipSetupFlutterOnInstall')),
-            subtitle: Text(I18Next.of(context).t(
+                !.t('modules:settings.scenes.skipSetupFlutterOnInstall')),
+            subtitle: Text(I18Next.of(context)!.t(
                     'modules:settings.scenes.thisWillOnlyCloneFlutterAndNotInstall') +
-                I18Next.of(context).t(
+                I18Next.of(context)!.t(
                     'modules:settings.scenes.dependenciesAfterANewVersionIsInstalled')),
-            value: settings.fvm.skipSetup ?? false,
+            value: settings.fvm.skipSetup,
             onChanged: (value) {
               settings.fvm.skipSetup = value;
               onSave();

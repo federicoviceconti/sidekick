@@ -13,7 +13,7 @@ class SettingsSectionGeneral extends StatelessWidget {
   const SettingsSectionGeneral(
     this.settings,
     this.onSave, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Settings
@@ -32,9 +32,9 @@ class SettingsSectionGeneral extends StatelessWidget {
           // return object of type Dialog
           return AlertDialog(
             title: Text(I18Next.of(context)
-                .t('modules:settings.scenes.areYouSureYouWantToResetSettings')),
+                !.t('modules:settings.scenes.areYouSureYouWantToResetSettings')),
             content: Text(
-              I18Next.of(context).t(
+              I18Next.of(context)!.t(
                   'modules:settings.scenes.thisWillOnlyResetSidekickSpecificPreferences'),
             ),
             buttonPadding: const EdgeInsets.all(15),
@@ -45,7 +45,7 @@ class SettingsSectionGeneral extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 child:
-                    Text(I18Next.of(context).t('modules:fvm.dialogs.cancel')),
+                    Text(I18Next.of(context)!.t('modules:fvm.dialogs.cancel')),
               ),
               TextButton(
                 onPressed: () async {
@@ -53,10 +53,10 @@ class SettingsSectionGeneral extends StatelessWidget {
                   settings.sidekick = SidekickSettings();
                   onSave();
                   notify(I18Next.of(context)
-                      .t('modules:settings.scenes.appSettingsHaveBeenReset'));
+                      !.t('modules:settings.scenes.appSettingsHaveBeenReset'));
                 },
                 child:
-                    Text(I18Next.of(context).t('modules:fvm.dialogs.confirm')),
+                    Text(I18Next.of(context)!.t('modules:fvm.dialogs.confirm')),
               ),
             ],
           );
@@ -68,15 +68,15 @@ class SettingsSectionGeneral extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20),
       child: ListView(
         children: [
-          Text(I18Next.of(context).t('modules:settings.scenes.general'),
+          Text(I18Next.of(context)!.t('modules:settings.scenes.general'),
               style: Theme.of(context).textTheme.headline6),
           const SizedBox(height: 20),
           ListTile(
             title: Text(
-              I18Next.of(context).t('modules:settings.scenes.theme'),
+              I18Next.of(context)!.t('modules:settings.scenes.theme'),
             ),
             subtitle: Text(
-              I18Next.of(context).t(
+              I18Next.of(context)!.t(
                   'modules:settings.scenes.selectAThemeOrSwitchAccordingToSystemSettings'),
             ),
             trailing: DropdownButton(
@@ -87,32 +87,34 @@ class SettingsSectionGeneral extends StatelessWidget {
                 DropdownMenuItem(
                   value: SettingsThemeMode.system,
                   child: Text(
-                      I18Next.of(context).t('modules:settings.scenes.system')),
+                      I18Next.of(context)!.t('modules:settings.scenes.system')),
                 ),
                 DropdownMenuItem(
                   value: SettingsThemeMode.light,
                   child: Text(
-                      I18Next.of(context).t('modules:settings.scenes.light')),
+                      I18Next.of(context)!.t('modules:settings.scenes.light')),
                 ),
                 DropdownMenuItem(
                   value: SettingsThemeMode.dark,
                   child: Text(
-                      I18Next.of(context).t('modules:settings.scenes.dark')),
+                      I18Next.of(context)!.t('modules:settings.scenes.dark')),
                 ),
               ],
-              onChanged: (themeMode) async {
-                settings.sidekick.themeMode = themeMode;
-                onSave();
+              onChanged: (String? themeMode) async {
+                if(themeMode != null && themeMode is String) {
+                  settings.sidekick.themeMode = themeMode;
+                  onSave();
+                }
               },
             ),
           ),
           const Divider(),
           ListTile(
             title: Text(
-              I18Next.of(context).t('modules:settings.scenes.ideSelection'),
+              I18Next.of(context)!.t('modules:settings.scenes.ideSelection'),
             ),
             subtitle: Text(
-              I18Next.of(context).t(
+              I18Next.of(context)!.t(
                   'modules:settings.scenes.whatIdeDoYouWantToOpenYourProjectsWith'),
             ),
             trailing: DropdownButton(
@@ -139,7 +141,7 @@ class SettingsSectionGeneral extends StatelessWidget {
                         ))
                     .toList()
               ],
-              onChanged: (val) async {
+              onChanged: (String? val) async {
                 settings.sidekick.ide = (val == 'none' ? null : val);
                 onSave();
               },
@@ -148,22 +150,22 @@ class SettingsSectionGeneral extends StatelessWidget {
           const Divider(),
           ListTile(
             title:
-                Text(I18Next.of(context).t('modules:settings.scenes.language')),
+                Text(I18Next.of(context)!.t('modules:settings.scenes.language')),
             trailing: DropdownButton<Locale>(
               underline: Container(),
               isDense: true,
-              value: settings.sidekick.locale ?? I18Next.of(context).locale,
+              value: settings.sidekick.locale ?? I18Next.of(context)?.locale,
               items: languageManager.supportedLocales.map((locale) {
                 return DropdownMenuItem(
                   value: locale,
                   child: Text(
-                    I18Next.of(context).t(
+                    I18Next.of(context)!.t(
                       'settings:sidekick.language.${locale.toLanguageTag()}',
                     ),
                   ),
                 );
               }).toList(),
-              onChanged: (Locale locale) async {
+              onChanged: (Locale? locale) async {
                 settings.sidekick.locale = locale;
                 onSave();
               },
@@ -172,17 +174,17 @@ class SettingsSectionGeneral extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(I18Next.of(context)
-                .t('modules:selectedDetail.components.version')),
+                !.t('modules:selectedDetail.components.version')),
             trailing: Text(packageVersion),
           ),
           const Divider(),
           ListTile(
             title: Text(I18Next.of(context)
-                .t('modules:settings.scenes.resetToDefaultSettings')),
+                !.t('modules:settings.scenes.resetToDefaultSettings')),
             trailing: OutlinedButton(
               onPressed: handleReset,
               child:
-                  Text(I18Next.of(context).t('modules:settings.scenes.reset')),
+                  Text(I18Next.of(context)!.t('modules:settings.scenes.reset')),
             ),
           ),
         ],

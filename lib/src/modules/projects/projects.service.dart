@@ -15,7 +15,7 @@ class ProjectsService {
   static const _key = 'projects_service_box';
 
   /// Storage box
-  static Box<ProjectRef> box;
+  static late Box<ProjectRef> box;
 
   /// Initializes the service
   static Future<void> init() async {
@@ -23,7 +23,7 @@ class ProjectsService {
   }
 
   /// Loads all projects
-  static Future<List<FlutterProject>> load() async {
+  static Future<List<FlutterProject?>> load() async {
     /// Return if its empty
     if (box.isEmpty) return <FlutterProject>[];
 

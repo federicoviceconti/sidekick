@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
+import 'package:sidekick/src/modules/updater/updater.dto.dart';
 
 import '../../../version.dart';
 import '../updater.provider.dart';
@@ -10,7 +11,7 @@ import '../updater.provider.dart';
 class SkUpdateInfo extends HookWidget {
   /// Constructor
   const SkUpdateInfo({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -18,12 +19,12 @@ class SkUpdateInfo extends HookWidget {
     final updater = useProvider(updaterProvider.notifier);
     final updateInfo = useProvider(updaterProvider);
 
-    if (updateInfo.ready) {
+    if (updateInfo != null && updateInfo.ready) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            I18Next.of(context).t(
+            I18Next.of(context)!.t(
               'modules:updater.components.aNewVersionOfSidekickIsAvailableUpdateinfolatest',
               variables: {
                 'updateInfoLatest': updateInfo.latest,
@@ -35,7 +36,7 @@ class SkUpdateInfo extends HookWidget {
             onPressed: () {},
             child: Text(
               I18Next.of(context)
-                  .t('modules:updater.components.clickHereToDownload'),
+                  !.t('modules:updater.components.clickHereToDownload'),
             ),
           ),
         ],
@@ -48,15 +49,16 @@ class SkUpdateInfo extends HookWidget {
         const SizedBox(width: 5),
         const Text(packageVersion),
         const SizedBox(width: 20),
-        Text('${updateInfo.latest}'),
+        Text('${updateInfo?.latest}'),
         const SizedBox(width: 20),
-        OutlinedButton.icon(
-          icon: Icon(
-            updateInfo.needUpdate ? Icons.file_download : Icons.refresh,
-          ),
-          label: Text(I18Next.of(context).t('components:atoms.refresh')),
-          onPressed: updater.checkLatest,
-        ),
+        updateInfo != null
+            ? OutlinedButton.icon(
+              icon: Icon(
+                updateInfo.needUpdate ? Icons.file_download : Icons.refresh,
+              ),
+              label: Text(I18Next.of(context)!.t('components:atoms.refresh')),
+              onPressed: updater.checkLatest,
+            ) : IgnorePointer(),
       ],
     );
   }

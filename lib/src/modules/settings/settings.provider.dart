@@ -16,14 +16,14 @@ class _SettingsStateNotifier extends StateNotifier<AllSettings> {
   ProviderReference ref;
   _SettingsStateNotifier(
     this.ref, {
-    AllSettings initialState,
+    required AllSettings initialState,
   }) : super(initialState) {
     // Set initial settings from local storage
     _loadState();
   }
 
   Future<void> _checkAppSettingsChanges(SidekickSettings settings) async {
-    final changed = settings != _prevState.sidekick;
+    final changed = settings != _prevState?.sidekick;
 
     // Save sidekick settings changed
     if (changed) {
@@ -32,7 +32,7 @@ class _SettingsStateNotifier extends StateNotifier<AllSettings> {
   }
 
   Future<void> _checkAnalyticsChanges(FlutterSettings settings) async {
-    final changed = settings != _prevState.flutter;
+    final changed = settings != _prevState?.flutter;
     // Return if nothing changed
     if (changed) {
       // Toggle analytics
@@ -41,13 +41,13 @@ class _SettingsStateNotifier extends StateNotifier<AllSettings> {
   }
 
   Future<void> _checkFvmSettingsChanges(FvmSettings settings) async {
-    final changed = settings != _prevState.fvm;
+    final changed = settings != _prevState?.fvm;
     if (changed) {
       await FVMClient.saveSettings(settings);
     }
   }
 
-  AllSettings _prevState;
+  AllSettings? _prevState;
 
   Future<void> _loadState() async {
     /// Update app state right away
@@ -82,7 +82,7 @@ class _SettingsStateNotifier extends StateNotifier<AllSettings> {
       _prevState = state.copy();
     } on Exception {
       // Revert settings in case of errors
-      state = _prevState;
+      if(_prevState != null) state = _prevState!;
       rethrow;
     }
   }

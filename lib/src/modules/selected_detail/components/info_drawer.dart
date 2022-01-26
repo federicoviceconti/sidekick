@@ -15,7 +15,7 @@ import 'release_info_section.dart';
 /// Drawer to display selected detail
 class SelectedDetailDrawer extends HookWidget {
   /// Constructors
-  const SelectedDetailDrawer({Key key}) : super(key: key);
+  const SelectedDetailDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class SelectedDetailDrawer extends HookWidget {
             color: Theme.of(context).cardColor,
             child: Center(
                 child: Caption(I18Next.of(context)
-                    .t('modules:selectedDetail.components.nothingSelected'))),
+                    !.t('modules:selectedDetail.components.nothingSelected'))),
           ),
         ),
       );

@@ -9,7 +9,7 @@ class FvmMasterStatus extends StatelessWidget {
   /// Constructor
   const FvmMasterStatus(
     this.masterChannel, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Master

@@ -8,7 +8,7 @@ Future<void> openLink(BuildContext context, String url) async {
   if (await canLaunch(url)) {
     await launch(url);
   } else {
-    throw I18Next.of(context).t(
+    throw I18Next.of(context)!.t(
       'modules:common.utils.couldNotLaunchUrl',
       variables: {'url': url},
     );

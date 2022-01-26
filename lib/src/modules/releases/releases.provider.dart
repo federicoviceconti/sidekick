@@ -10,11 +10,9 @@ import '../common/constants.dart';
 import '../fvm/fvm.provider.dart';
 
 class AppReleasesState {
-  bool fetching;
-
-  MasterDto master;
-  List<ChannelDto> channels;
-  List<VersionDto> versions;
+  MasterDto? master;
+  List<ChannelDto>? channels;
+  List<VersionDto>? versions;
 
   bool hasGlobal;
 
@@ -22,7 +20,6 @@ class AppReleasesState {
     this.channels,
     this.versions,
     this.master,
-    this.fetching = true,
     this.hasGlobal = false,
   }) {
     channels = <ChannelDto>[];
@@ -31,10 +28,10 @@ class AppReleasesState {
 
   /// Returns all releases and channels
   Map<String, ReleaseDto> get allMap {
-    final releases = [...channels, ...versions];
+    final releases = [...channels ?? [], ...versions ?? []];
     if (master != null) {
       // Master goes first
-      releases.insert(0, master);
+      releases.insert(0, master!);
     }
     return {for (var release in releases) release.name: release};
   }
@@ -49,6 +46,10 @@ class AppReleasesState {
         .map((entry) => entry.value)
         .toList();
   }
+
+  bool get isVersionReleaseFetchFinished {
+    return channels != null && versions != null && master != null;
+  }
 }
 
 final _fetchFlutterReleases = FutureProvider<FlutterReleases>(
@@ -57,7 +58,7 @@ final _fetchFlutterReleases = FutureProvider<FlutterReleases>(
 
 final releasesStateProvider = Provider<AppReleasesState>((ref) {
   // Filter only version that are valid releases
-  FlutterReleases payload;
+  FlutterReleases? payload;
   ref.watch(_fetchFlutterReleases).whenData((value) => payload = value);
   final installedVersions = ref.watch(fvmCacheProvider.notifier);
 
@@ -71,12 +72,10 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
     return releasesState;
   }
 
-  releasesState.fetching = false;
+  final flutterReleases = payload?.releases;
+  final flutterChannels = payload?.channels;
 
-  final flutterReleases = payload.releases;
-  final flutterChannels = payload.channels;
-
-  if (flutterReleases == null || installedVersions == null) {
+  if (flutterReleases == null) {
     return releasesState;
   }
 
@@ -85,7 +84,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
 
   //  MASTER: Set Master separetely because workflow is very different
   final masterCache = installedVersions.getChannel(kMasterChannel);
-  String masterVersion;
+  String? masterVersion;
   if (masterCache != null) {
     masterVersion = FVMClient.getSdkVersionSync(masterCache);
   }
@@ -100,17 +99,17 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
 
   // CHANNELS: Loop through available channels NOT including master
   for (var name in kReleaseChannels) {
-    final latestRelease = flutterChannels[name];
+    final latestRelease = flutterChannels?[name];
     final channelCache = installedVersions.getChannel(name);
 
     // Get sdk version
-    String sdkVersion;
-    Release currentRelease;
+    String? sdkVersion;
+    Release? currentRelease;
 
     if (channelCache != null) {
       sdkVersion = FVMClient.getSdkVersionSync(channelCache);
       if (sdkVersion != null) {
-        currentRelease = payload.getReleaseFromVersion(sdkVersion);
+        currentRelease = payload?.getReleaseFromVersion(sdkVersion);
       }
     }
 
@@ -125,16 +124,14 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
       isGlobal: globalVersion == name,
     );
 
-    releasesState.channels.add(channelDto);
+    releasesState.channels?.add(channelDto);
   }
 
   // VERSIONS loop to create versions
   for (final item in flutterReleases) {
-    if (item == null) return null;
-
     // Check if version is found in installed versions
     final cacheVersion = installedVersions.getVersion(item.version);
-    String sdkVersion;
+    String? sdkVersion;
 
     if (cacheVersion != null) {
       sdkVersion = FVMClient.getSdkVersionSync(cacheVersion);
@@ -148,13 +145,13 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
       isGlobal: globalVersion == item.version,
     );
 
-    releasesState.versions.add(version);
+    releasesState.versions?.add(version);
   }
 
   return releasesState;
 });
 
-final getVersionProvider = Provider.family<ReleaseDto, String>(
+final getVersionProvider = Provider.family<ReleaseDto?, String?>(
   (ref, versionName) {
     final state = ref.watch(releasesStateProvider);
     return state.allMap[versionName];
@@ -177,7 +174,7 @@ extension FilterExtension on Filter {
 }
 
 /// Returns a [Channel] from [name]
-Filter filterFromName(String name) {
+Filter? filterFromName(String? name) {
   switch (name) {
     case 'stable':
       return Filter.stable;
@@ -202,17 +199,17 @@ final filterableReleasesProvider = Provider((ref) {
     return releases.versions;
   }
 
-  final versions = releases.versions.where((version) {
+  final versions = releases.versions?.where((version) {
     if (version.isChannel && version.name == filter.name) {
       return true;
     }
 
-    if (!version.isChannel && version.release.channelName == filter.name) {
+    if (!version.isChannel && version.release?.channelName == filter.name) {
       return true;
     }
 
     return false;
   });
 
-  return versions.toList();
+  return versions?.toList() ?? [];
 });

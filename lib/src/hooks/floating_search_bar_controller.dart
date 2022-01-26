@@ -7,7 +7,7 @@ FloatingSearchBarController useFloatingSearchBarController() =>
 class _FloatingSearchBarControllerHook
     extends Hook<FloatingSearchBarController> {
   const _FloatingSearchBarControllerHook([
-    List<Object> keys,
+    List<Object>? keys,
   ]) : super(keys: keys);
 
   @override
@@ -18,7 +18,7 @@ class _FloatingSearchBarControllerHook
 
 class _FloatingSearchBarControllerHookState extends HookState<
     FloatingSearchBarController, _FloatingSearchBarControllerHook> {
-  FloatingSearchBarController _controller;
+  FloatingSearchBarController? _controller;
 
   @override
   void initHook() {
@@ -26,7 +26,7 @@ class _FloatingSearchBarControllerHookState extends HookState<
   }
 
   @override
-  FloatingSearchBarController build(_) => _controller;
+  FloatingSearchBarController build(_) => _controller!;
 
   @override
   void dispose() => _controller?.dispose();

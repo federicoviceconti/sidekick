@@ -6,20 +6,20 @@ import 'release.dto.dart';
 /// Releae channel dto
 class ChannelDto extends ReleaseDto {
   /// Latest releae of a channel
-  Release currentRelease;
+  Release? currentRelease;
 
   /// SDK Version
-  final String sdkVersion;
+  final String? sdkVersion;
 
   /// Constructor
   ChannelDto({
-    @required String name,
-    @required Release release,
-    @required CacheVersion cache,
-    @required needSetup,
-    @required this.sdkVersion,
-    @required this.currentRelease,
-    @required isGlobal,
+    required String name,
+    Release? release,
+    required CacheVersion? cache,
+    required needSetup,
+    required this.sdkVersion,
+    this.currentRelease,
+    required isGlobal,
   }) : super(
           name: name,
           release: release,

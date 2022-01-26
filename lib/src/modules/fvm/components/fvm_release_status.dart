@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fvm/fvm.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -14,7 +15,7 @@ class FvmReleaseStatus extends StatelessWidget {
   /// Constructor
   const FvmReleaseStatus(
     this.release, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Release
@@ -59,7 +60,13 @@ class FvmReleaseStatus extends StatelessWidget {
 
     // If version is master
     if (release is MasterDto) {
-      return FvmMasterStatus(release);
+      return FvmMasterStatus(ChannelDto(
+        name: release.name,
+        cache: release.cache,
+        isGlobal: release.isGlobal,
+        needSetup: release.needSetup,
+        sdkVersion: ''
+      ));
     }
 
     // Default fallback
@@ -67,13 +74,13 @@ class FvmReleaseStatus extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(currentRelease),
+        Text(currentRelease ?? ''),
         const SizedBox(width: 10),
         const Icon(MdiIcons.arrowRight, size: 15),
         const SizedBox(width: 10),
         OutlinedButton.icon(
           icon: const Icon(MdiIcons.triangle, size: 15),
-          label: Text(release.release?.version),
+          label: Text(release.release?.version ?? ''),
           onPressed: () {
             context.read(fvmQueueProvider.notifier).upgrade(context, release);
           },

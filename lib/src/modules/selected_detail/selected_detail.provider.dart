@@ -12,11 +12,11 @@ class SelectedDetail {
   });
 
   /// Release selected
-  ReleaseDto release;
+  ReleaseDto? release;
 
   /// Project selected
-  Project project;
+  Project? project;
 }
 
 /// Selected Release Provider
-final selectedDetailProvider = StateProvider<SelectedDetail>((_) => null);
+final selectedDetailProvider = StateProvider<SelectedDetail?>((_) => null);

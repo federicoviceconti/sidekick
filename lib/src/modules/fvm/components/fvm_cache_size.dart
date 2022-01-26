@@ -11,7 +11,7 @@ import '../fvm.provider.dart';
 class FvmCacheSize extends HookWidget {
   /// Constructor
   const FvmCacheSize({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -52,10 +52,10 @@ class FvmCacheSize extends HookWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Caption(
-                        I18Next.of(context).t('modules:fvm.components.inUse')),
+                        I18Next.of(context)!.t('modules:fvm.components.inUse')),
                     Caption(cacheSize.friendlySize),
                     Caption(
-                        I18Next.of(context).t('modules:fvm.components.unused')),
+                        I18Next.of(context)!.t('modules:fvm.components.unused')),
                   ],
                 )
               ],

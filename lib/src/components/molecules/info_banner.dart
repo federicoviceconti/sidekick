@@ -5,7 +5,7 @@ import '../atoms/typography.dart';
 
 // TODO: Make this generic
 class InfoBanner extends StatelessWidget {
-  const InfoBanner({Key key}) : super(key: key);
+  const InfoBanner({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +26,10 @@ class InfoBanner extends StatelessWidget {
           child: Row(
             children: [
               SizedBox(width: 10),
-              Subheading(I18Next.of(context).t('components:molecules.master')),
+              Subheading(I18Next.of(context)!.t('components:molecules.master')),
               SizedBox(width: 20),
               Expanded(
-                child: Caption(I18Next.of(context).t(
+                child: Caption(I18Next.of(context)!.t(
                     'modules:releases.theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional')),
               ),
               SizedBox(width: 20),

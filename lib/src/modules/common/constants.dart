@@ -34,9 +34,9 @@ const kFlutterTagsUrl = 'https://github.com/flutter/flutter/releases/tag/';
 /// Description for the channels
 Map<String, String> channelDescriptions(BuildContext context) => {
       'stable':
-          I18Next.of(context).t('modules:common.stableChannelDescription'),
-      'beta': I18Next.of(context).t('modules:common.betaChannelDescription'),
-      'dev': I18Next.of(context).t('modules:common.devChannelDescription'),
+          I18Next.of(context)!.t('modules:common.stableChannelDescription'),
+      'beta': I18Next.of(context)!.t('modules:common.betaChannelDescription'),
+      'dev': I18Next.of(context)!.t('modules:common.devChannelDescription'),
       'master':
-          I18Next.of(context).t('modules:common.masterChannelDescription'),
+          I18Next.of(context)!.t('modules:common.masterChannelDescription'),
     };

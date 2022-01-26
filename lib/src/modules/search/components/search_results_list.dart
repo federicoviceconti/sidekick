@@ -12,7 +12,7 @@ class SearchResultsList extends StatelessWidget {
   /// Constructor
   const SearchResultsList(
     this.results, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Search results
@@ -33,7 +33,7 @@ class SearchResultsList extends StatelessWidget {
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
                   title: I18Next.of(context)
-                      .t('modules:search.components.channels'),
+                      !.t('modules:search.components.channels'),
                   count: results.channels.length,
                 ),
               ),
@@ -52,7 +52,7 @@ class SearchResultsList extends StatelessWidget {
             slivers: [
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
-                  title: I18Next.of(context).t('modules:projects.projects'),
+                  title: I18Next.of(context)!.t('modules:projects.projects'),
                   count: results.projects.length,
                 ),
               ),
@@ -69,7 +69,7 @@ class SearchResultsList extends StatelessWidget {
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
                   title: I18Next.of(context)
-                      .t('modules:search.components.stableReleases'),
+                      !.t('modules:search.components.stableReleases'),
                   count: results.stableReleases.length,
                 ),
               ),
@@ -86,7 +86,7 @@ class SearchResultsList extends StatelessWidget {
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
                   title: I18Next.of(context)
-                      .t('modules:search.components.betaReleases'),
+                      !.t('modules:search.components.betaReleases'),
                   count: results.betaReleases.length,
                 ),
               ),
@@ -103,7 +103,7 @@ class SearchResultsList extends StatelessWidget {
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
                   title: I18Next.of(context)
-                      .t('modules:search.components.devReleases'),
+                      !.t('modules:search.components.devReleases'),
                   count: results.devReleases.length,
                 ),
               ),

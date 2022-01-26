@@ -32,10 +32,10 @@ class LanguageManager {
                 .toLowerCase() +
             '_' +
             languageManager._supportedLanguagesCodes[i].countryCode
-                .toUpperCase());
+                !.toUpperCase());
   }
 
-  String formatter(Object value, String format, Locale locale) {
+  String formatter(Object value, String? format, Locale locale) {
     switch (format) {
       case 'uppercase':
         return value.toString().toUpperCase();

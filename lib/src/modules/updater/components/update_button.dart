@@ -10,7 +10,7 @@ import '../updater.provider.dart';
 /// Sidekick update button
 class SkUpdateButton extends HookWidget {
   /// Constructor
-  const SkUpdateButton({Key key}) : super(key: key);
+  const SkUpdateButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class SkUpdateButton extends HookWidget {
     final updateInfo = useProvider(updaterProvider);
 
     /// Return empty if its not installed or does not need update
-    if (!updateInfo.ready) {
+    if (updateInfo == null || !updateInfo.ready) {
       return SizedBox(height: 0, width: 0);
     }
 
@@ -36,12 +36,12 @@ class SkUpdateButton extends HookWidget {
                 Icon(MdiIcons.alertDecagram),
                 SizedBox(width: 10),
                 Heading(I18Next.of(context)
-                    .t('modules:updater.components.updateAvailable')),
+                    !.t('modules:updater.components.updateAvailable')),
               ],
             ),
             content: Container(
               child: Paragraph(
-                I18Next.of(context).t(
+                I18Next.of(context)!.t(
                   'modules:updater.components.sidekickVersionUpdateinfolatestIsNowAvailable',
                   variables: {
                     'updateInfoLatest': updateInfo.latest,
@@ -56,7 +56,7 @@ class SkUpdateButton extends HookWidget {
                   Navigator.of(context).pop();
                 },
                 child: Text(
-                    I18Next.of(context).t('modules:updater.components.later')),
+                    I18Next.of(context)!.t('modules:updater.components.later')),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -64,7 +64,7 @@ class SkUpdateButton extends HookWidget {
                   Navigator.of(context).pop();
                 },
                 child: Text(I18Next.of(context)
-                    .t('modules:updater.components.updateNow')),
+                    !.t('modules:updater.components.updateNow')),
               ),
             ],
           );
@@ -80,7 +80,7 @@ class SkUpdateButton extends HookWidget {
             onPressed: showUpdateDialog,
             label: Text(
               I18Next.of(context)
-                  .t('modules:updater.components.updateAvailable'),
+                  !.t('modules:updater.components.updateAvailable'),
               style: TextStyle(fontSize: 12),
             ),
           ),

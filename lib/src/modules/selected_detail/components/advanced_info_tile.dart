@@ -13,7 +13,7 @@ class AdvancedInfoTile extends StatelessWidget {
   /// Constructor
   const AdvancedInfoTile(
     this.release, {
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Release
@@ -27,33 +27,37 @@ class AdvancedInfoTile extends StatelessWidget {
 
     return SkGroupTile(
       title: Text(
-          I18Next.of(context).t('modules:selectedDetail.components.advanced')),
+          I18Next.of(context)!.t('modules:selectedDetail.components.advanced')),
       children: [
         SkListTile(
           title: Text(I18Next.of(context)
-              .t('modules:selectedDetail.components.downloadZip')),
-          subtitle: Caption(I18Next.of(context).t(
+              !.t('modules:selectedDetail.components.downloadZip')),
+          subtitle: Caption(I18Next.of(context)!.t(
               'modules:selectedDetail.components.zipFileWithAllReleaseDependencies')),
           trailing: IconButton(
             icon: const Icon(Icons.cloud_download),
             onPressed: () async {
-              await openLink(context, release.release.archiveUrl);
+              final archiveUrl = release.release?.archiveUrl;
+
+              if(archiveUrl != null) {
+                await openLink(context, archiveUrl);
+              }
             },
           ),
         ),
         const Divider(),
         SkListTile(
           title: Text(
-              I18Next.of(context).t('modules:selectedDetail.components.hash')),
-          subtitle: Caption(release.release.hash),
-          trailing: CopyButton(release.release.hash),
+              I18Next.of(context)!.t('modules:selectedDetail.components.hash')),
+          subtitle: Caption(release.release?.hash ?? ''),
+          trailing: CopyButton(release.release?.hash ?? ''),
         ),
         const Divider(),
         SkListTile(
           title: Text(I18Next.of(context)
-              .t('modules:selectedDetail.components.sha256')),
-          subtitle: Caption(release.release.sha256),
-          trailing: CopyButton(release.release.sha256),
+              !.t('modules:selectedDetail.components.sha256')),
+          subtitle: Caption(release.release?.sha256 ?? ''),
+          trailing: CopyButton(release.release?.sha256 ?? ''),
         ),
       ],
     );
