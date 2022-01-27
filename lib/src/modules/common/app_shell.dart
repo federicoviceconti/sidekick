@@ -120,7 +120,7 @@ class AppShell extends HookWidget {
                   Icons.explore,
                 ),
               ],
-            ) : IgnorePointer(),
+            ) : const IgnorePointer(),
             const VerticalDivider(
               thickness: 1,
               width: 1,

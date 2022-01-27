@@ -95,7 +95,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
   ref.watch(fvmCacheProvider);
   final installedVersions = ref.read(fvmCacheProvider.notifier);
 
-//Creates empty releases state
+  //Creates empty releases state
   final releasesState = AppReleasesState();
   // Return empty state if not loaded
   if (payload == null) {
@@ -106,6 +106,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
   final flutterChannels = payload?.channels;
 
   if (flutterReleases == null) {
+    releasesState.fetching = false;
     return releasesState;
   }
 
@@ -179,7 +180,7 @@ final releasesStateProvider = Provider<AppReleasesState>((ref) {
   }
 
   releasesState.generateMap();
-
+  releasesState.fetching = false;
   return releasesState;
 });
 
