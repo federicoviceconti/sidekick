@@ -13,7 +13,6 @@ import 'package:flutter/widgets.dart';
 import 'package:fvm/fvm.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
-import 'package:collection/collection.dart';
 
 import '../../modules/common/utils/notify.dart';
 import '../settings/settings.service.dart';
@@ -30,6 +29,8 @@ final projectsPerVersionProvider = Provider((ref) {
   }
 
   for (final project in projects) {
+    if(project == null) continue;
+
     final version = project.pinnedVersion ?? 'NONE';
     final versionProjects = list[version];
     if (versionProjects != null) {
@@ -44,12 +45,12 @@ final projectsPerVersionProvider = Provider((ref) {
 
 /// Projects provider
 final projectsProvider =
-    StateNotifierProvider<ProjectsStateNotifier, List<FlutterProject>>(
+    StateNotifierProvider<ProjectsStateNotifier, List<FlutterProject?>>(
   (_) => ProjectsStateNotifier(),
 );
 
 /// Projects state
-class ProjectsStateNotifier extends StateNotifier<List<FlutterProject>> {
+class ProjectsStateNotifier extends StateNotifier<List<FlutterProject?>> {
   /// Constructor
   ProjectsStateNotifier() : super(<FlutterProject>[]) {
     load();
@@ -67,7 +68,7 @@ class ProjectsStateNotifier extends StateNotifier<List<FlutterProject>> {
     /// Do migration
     await _migrate();
 
-    state = (await ProjectsService.load()).whereNotNull().toList();
+    state = await ProjectsService.load();
   }
 
   /// Reloads one project

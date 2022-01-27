@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:i18next/i18next.dart';
+import 'package:collection/collection.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:sidekick/src/modules/common/utils/helpers.dart';
@@ -52,7 +52,7 @@ class ProjectsScreen extends HookWidget {
     useEffect(() {
       if (settings.sidekick.onlyProjectsWithFvm) {
         filteredProjects.value =
-            projects.where((p) => p.pinnedVersion != null).toList();
+            projects.where((p) => p?.pinnedVersion != null).toList();
       } else {
         filteredProjects.value = [...projects];
       }
@@ -101,7 +101,7 @@ class ProjectsScreen extends HookWidget {
                 child: ResponsiveGridList(
                     desiredItemWidth: 290,
                     minSpacing: 0,
-                    children: filteredProjects.value.map((project) {
+                    children: filteredProjects.value.whereNotNull().map((project) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 10, right: 10),
                         child: ProjectListItem(

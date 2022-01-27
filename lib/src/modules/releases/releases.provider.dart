@@ -243,5 +243,5 @@ final filterableReleasesProvider = Provider((ref) {
     return false;
   });
 
-  return versions?.toList() ?? [];
+  return versions.toList();
 });
