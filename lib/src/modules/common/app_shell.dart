@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:i18next/i18next.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sidekick/src/components/organisms/app_bottom_bar.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
+import 'package:sidekick/src/modules/common/utils/indexed_transition_switcher.dart';
+import 'package:sidekick/src/modules/search/components/search_bar.dart';
+import 'package:sidekick/src/modules/selected_detail/components/info_drawer.dart';
 
 import '../../components/molecules/top_app_bar.dart';
-import '../../components/organisms/app_bottom_bar.dart';
 import '../../components/organisms/shortcut_manager.dart';
 import '../../modules/common/utils/layout_size.dart';
 import '../../theme.dart';
@@ -15,8 +18,6 @@ import '../fvm/fvm.screen.dart';
 import '../navigation/navigation.provider.dart';
 import '../projects/projects.screen.dart';
 import '../releases/releases.screen.dart';
-import '../search/components/search_bar.dart';
-import '../selected_detail/components/info_drawer.dart';
 import '../selected_detail/selected_detail.provider.dart';
 import 'constants.dart';
 
@@ -33,12 +34,29 @@ class AppShell extends HookWidget {
   /// Constructor
   const AppShell({Key? key}) : super(key: key);
 
+  NavigationRailDestination renderNavButton(
+    BuildContext context,
+    String label,
+    IconData iconData,
+  ) {
+    return NavigationRailDestination(
+      icon: Icon(iconData, size: 20),
+      selectedIcon: Icon(
+        iconData,
+        size: 20,
+        color: Theme.of(context).colorScheme.secondary,
+      ),
+      label: Text(label),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     LayoutSize.init(context);
     final navigation = useProvider(navigationProvider.notifier);
     final currentRoute = useProvider(navigationProvider);
     final selectedInfo = useProvider(selectedDetailProvider).state;
+    final focusNode = useFocusNode();
 
     // Index of item selected
     final selectedIndex = useState(0);
@@ -66,19 +84,8 @@ class AppShell extends HookWidget {
       }
     });
 
-    NavigationRailDestination renderNavButton(String label, IconData iconData) {
-      return NavigationRailDestination(
-        icon: Icon(iconData, size: 20),
-        selectedIcon: Icon(
-          iconData,
-          size: 20,
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-        label: Text(label),
-      );
-    }
-
     return SkShortcutManager(
+      focusNode: focusNode,
       child: Scaffold(
         appBar: const SkAppBar(),
         bottomNavigationBar: const AppBottomBar(),
@@ -98,15 +105,18 @@ class AppShell extends HookWidget {
               },
               destinations: [
                 renderNavButton(
-                  I18Next.of(context)!.t('modules:common.navButtonDashboard'),
+                  context,
+                  context.i18n('modules:common.navButtonDashboard'),
                   Icons.category,
                 ),
                 renderNavButton(
-                  I18Next.of(context)!.t('modules:common.navButtonProjects'),
+                  context,
+                  context.i18n('modules:common.navButtonProjects'),
                   MdiIcons.folderMultiple,
                 ),
                 renderNavButton(
-                  I18Next.of(context)!.t('modules:common.navButtonExplore'),
+                  context,
+                  context.i18n('modules:common.navButtonExplore'),
                   Icons.explore,
                 ),
               ],
@@ -120,34 +130,33 @@ class AppShell extends HookWidget {
                 fit: StackFit.expand,
                 children: [
                   Scaffold(
-                    body: Container(
-                      child: Row(
-                        children: <Widget>[
-                          // This is the main content.
-                          Expanded(
-                            child: PageTransitionSwitcher(
-                              duration: const Duration(milliseconds: 250),
-                              reverse: selectedIndex.value <
-                                  (navigation.previous?.index ?? 0),
-                              transitionBuilder: (
-                                child,
-                                animation,
-                                secondaryAnimation,
-                              ) {
-                                return SharedAxisTransition(
-                                  fillColor: Colors.transparent,
-                                  animation: animation,
-                                  secondaryAnimation: secondaryAnimation,
-                                  transitionType:
-                                      SharedAxisTransitionType.vertical,
-                                  child: child,
-                                );
-                              },
-                              child: pages[selectedIndex.value],
-                            ),
+                    body: Row(
+                      children: <Widget>[
+                        // This is the main content.
+                        Expanded(
+                          child: IndexedTransitionSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            reverse: selectedIndex.value <
+                                (navigation.previous?.index ?? 0),
+                            transitionBuilder: (
+                              child,
+                              animation,
+                              secondaryAnimation,
+                            ) {
+                              return SharedAxisTransition(
+                                fillColor: Colors.transparent,
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                transitionType:
+                                    SharedAxisTransitionType.vertical,
+                                child: child,
+                              );
+                            },
+                            index: selectedIndex.value,
+                            children: pages,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   const SearchBar(),

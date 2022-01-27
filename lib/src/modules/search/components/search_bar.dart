@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
 import '../../../components/atoms/blur_background.dart';
 import '../../../hooks/floating_search_bar_controller.dart';
@@ -61,13 +62,11 @@ class SearchBar extends HookWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Container(
-              child: const BlurBackground(
-                strength: 15,
-              ),
+            const BlurBackground(
+              strength: 15,
             ),
             FloatingSearchBar(
-              hint: I18Next.of(context)!.t('modules:search.components.search'),
+              hint: context.i18n('modules:search.components.search'),
               controller: controller,
               progress: isLoading.value,
               shadowColor: Colors.transparent,

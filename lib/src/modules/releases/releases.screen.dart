@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:i18next/i18next.dart';
 import 'package:collection/collection.dart';
 
 import '../../components/atoms/sliver_animated_switcher.dart';
@@ -21,13 +19,14 @@ class ReleasesScreen extends HookWidget {
   Widget build(BuildContext context) {
     final filter = useProvider(filterProvider);
     final versions = useProvider(filterableReleasesProvider)
-        ?.whereNotNull().toList() ?? [];
+        .whereNotNull().toList();
     final releases = useProvider(releasesStateProvider);
 
     return SkScreen(
       extendBody: false,
-      title: I18Next.of(context)!.t('modules:releases.releases'),
+      title: context.i18n('modules:releases.releases'),
       child: CustomScrollView(
+        primary: false,
         slivers: [
           SliverToBoxAdapter(
             child: AnimatedContainer(
@@ -49,12 +48,12 @@ class ReleasesScreen extends HookWidget {
                     children: [
                       const SizedBox(width: 10),
                       Subheading(
-                        I18Next.of(context)!.t('components:molecules.master'),
+                        context.i18n('components:molecules.master'),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
                         child: Caption(
-                          I18Next.of(context)!.t(
+                          context.i18n(
                               'modules:releases.theCurrentTipoftreeAbsoluteLatestCuttingEdgeBuildUsuallyFunctional'),
                         ),
                       ),
@@ -81,22 +80,20 @@ class ReleasesScreen extends HookWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: releases.channels?.map((channel) {
+                  children: releases.channels.map((channel) {
                     return Expanded(
                       child: ChannelShowcaseItem(channel),
                     );
-                  }).toList() ?? [],
+                  }).toList(),
                 ),
               ),
             ),
             title: SliverAnimatedSwitcher(
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: releases.channels?.map((channel) {
-                    return Expanded(child: ReleaseListItem(channel));
-                  }).toList() ?? [],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: releases.channels.map((channel) {
+                  return Expanded(child: ReleaseListItem(channel));
+                }).toList(),
               ),
             ),
           ),
@@ -108,50 +105,50 @@ class ReleasesScreen extends HookWidget {
               child: Divider(height: 0),
             ),
             automaticallyImplyLeading: false,
-            // actions: [Container()],
-            title: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Heading(
-                        I18Next.of(context)!.t('modules:releases.versions'),
-                      ),
-                      const SizedBox(width: 10),
-                      Chip(label: Text(versions.length.toString())),
-                    ],
-                  ),
-                  DropdownButton<String>(
-                    value: filter.state.name,
-                    icon: const Icon(Icons.filter_list),
-                    underline: Container(),
-                    items: Filter.values.map((Filter filter) {
-                      final text = filter != Filter.all
-                          ? filter.name.capitalize()
-                          : I18Next.of(context)!.t('modules:releases.all');
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Heading(
+                      context.i18n('modules:releases.versions'),
+                    ),
+                    const SizedBox(width: 10),
+                    Chip(label: Text(versions.length.toString())),
+                  ],
+                ),
+                DropdownButton<String>(
+                  value: filter.state.name,
+                  icon: const Icon(Icons.filter_list),
+                  underline: Container(),
+                  items: Filter.values.map((Filter filter) {
+                    final text = filter != Filter.all
+                        ? filter.name.capitalize()
+                        : context.i18n('modules:releases.all');
 
-                      return DropdownMenuItem(
-                        value: filter.name,
-                        child: Text(text),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      final filterFound = filterFromName(value);
-                      if(filterFound != null) {
-                        filter.state = filterFound;
-                      }
-                    },
-                  ),
-                ],
-              ),
+                    return DropdownMenuItem(
+                      value: filter.name,
+                      child: Text(text),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    final result = filterFromName(value);
+                    if(result != null) {
+                      filter.state = result;
+                    }
+                  },
+                ),
+              ],
             ),
           ),
           SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-              return ReleaseListItem(versions[index]);
-            }, childCount: versions.length),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return ReleaseListItem(versions[index]);
+              },
+              childCount: versions.length,
+            ),
           ),
         ],
       ),

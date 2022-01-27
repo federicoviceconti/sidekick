@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:i18next/i18next.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
+import 'package:sidekick/src/modules/projects/project.dto.dart';
 
 import '../../../components/atoms/sliver_header_delegate.dart';
 import '../../../components/atoms/sliver_section.dart';
@@ -26,14 +27,14 @@ class SearchResultsList extends StatelessWidget {
         maxHeight: MediaQuery.of(context).size.height / 1.2,
       ),
       child: CustomScrollView(
+        primary: false,
         slivers: <Widget>[
           SliverSection(
             shouldDisplay: results.channels.isNotEmpty,
             slivers: [
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
-                  title: I18Next.of(context)
-                      !.t('modules:search.components.channels'),
+                  title: context.i18n('modules:search.components.channels'),
                   count: results.channels.length,
                 ),
               ),
@@ -52,13 +53,13 @@ class SearchResultsList extends StatelessWidget {
             slivers: [
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
-                  title: I18Next.of(context)!.t('modules:projects.projects'),
+                  title: context.i18n('modules:projects.projects'),
                   count: results.projects.length,
                 ),
               ),
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return ProjectListItem(results.projects[index]);
+                  return ProjectListItem(results.projects[index] as FlutterProject);
                 }, childCount: results.projects.length),
               ),
             ],
@@ -68,8 +69,8 @@ class SearchResultsList extends StatelessWidget {
             slivers: [
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
-                  title: I18Next.of(context)
-                      !.t('modules:search.components.stableReleases'),
+                  title:
+                      context.i18n('modules:search.components.stableReleases'),
                   count: results.stableReleases.length,
                 ),
               ),
@@ -85,8 +86,7 @@ class SearchResultsList extends StatelessWidget {
             slivers: [
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
-                  title: I18Next.of(context)
-                      !.t('modules:search.components.betaReleases'),
+                  title: context.i18n('modules:search.components.betaReleases'),
                   count: results.betaReleases.length,
                 ),
               ),
@@ -102,8 +102,7 @@ class SearchResultsList extends StatelessWidget {
             slivers: [
               SliverPersistentHeader(
                 delegate: SliverHeaderDelegate(
-                  title: I18Next.of(context)
-                      !.t('modules:search.components.devReleases'),
+                  title: context.i18n('modules:search.components.devReleases'),
                   count: results.devReleases.length,
                 ),
               ),

@@ -44,11 +44,12 @@ class Console extends HookWidget {
       ),
       secondChild: GestureDetector(
         onTap: onExpand,
-        child: Container(
+        child: AnimatedContainer(
           color: Theme.of(context).brightness == Brightness.dark
               ? Colors.black45
               : const Color(0xFFF5F5F5),
           height: expand ? 160 : 40,
+          duration: const Duration(milliseconds: 250),
           constraints: expand
               ? const BoxConstraints(maxHeight: 160)
               : const BoxConstraints(maxHeight: 40),
@@ -65,15 +66,15 @@ class Console extends HookWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                           width: MediaQuery.of(context).size.width - 100,
-                          child: ConsoleText(lines.value.first)
-                      ),
+                          child: ConsoleText(lines.value.first)),
                     ],
                   ),
                 ),
                 secondChild: CupertinoScrollbar(
                   child: ListView.builder(
+                    primary: false,
                     shrinkWrap: true,
                     reverse: true,
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -95,12 +96,13 @@ class Console extends HookWidget {
                       color: Theme.of(context).colorScheme.secondary,
                       size: 15,
                     ),
-                    IconButton(
-                      onPressed: null,
-                      icon: expand
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 8),
+                      child: expand
                           ? const Icon(MdiIcons.chevronDown)
                           : const Icon(MdiIcons.chevronUp),
-                    ),
+                    )
                   ],
                 ),
               ),

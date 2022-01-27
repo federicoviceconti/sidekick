@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:i18next/i18next.dart';
 import 'package:sidekick/i18n/language_manager.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
 import '../../../modules/common/utils/notify.dart';
 import '../../../version.dart';
@@ -34,7 +35,7 @@ class SettingsSectionGeneral extends StatelessWidget {
             title: Text(I18Next.of(context)
                 !.t('modules:settings.scenes.areYouSureYouWantToResetSettings')),
             content: Text(
-              I18Next.of(context)!.t(
+              context.i18n(
                   'modules:settings.scenes.thisWillOnlyResetSidekickSpecificPreferences'),
             ),
             buttonPadding: const EdgeInsets.all(15),
@@ -44,8 +45,7 @@ class SettingsSectionGeneral extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child:
-                    Text(I18Next.of(context)!.t('modules:fvm.dialogs.cancel')),
+                child: Text(context.i18n('modules:fvm.dialogs.cancel')),
               ),
               TextButton(
                 onPressed: () async {
@@ -55,8 +55,7 @@ class SettingsSectionGeneral extends StatelessWidget {
                   notify(I18Next.of(context)
                       !.t('modules:settings.scenes.appSettingsHaveBeenReset'));
                 },
-                child:
-                    Text(I18Next.of(context)!.t('modules:fvm.dialogs.confirm')),
+                child: Text(context.i18n('modules:fvm.dialogs.confirm')),
               ),
             ],
           );
@@ -68,15 +67,15 @@ class SettingsSectionGeneral extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20),
       child: ListView(
         children: [
-          Text(I18Next.of(context)!.t('modules:settings.scenes.general'),
+          Text(context.i18n('modules:settings.scenes.general'),
               style: Theme.of(context).textTheme.headline6),
           const SizedBox(height: 20),
           ListTile(
             title: Text(
-              I18Next.of(context)!.t('modules:settings.scenes.theme'),
+              context.i18n('modules:settings.scenes.theme'),
             ),
             subtitle: Text(
-              I18Next.of(context)!.t(
+              context.i18n(
                   'modules:settings.scenes.selectAThemeOrSwitchAccordingToSystemSettings'),
             ),
             trailing: DropdownButton(
@@ -86,18 +85,15 @@ class SettingsSectionGeneral extends StatelessWidget {
               items: [
                 DropdownMenuItem(
                   value: SettingsThemeMode.system,
-                  child: Text(
-                      I18Next.of(context)!.t('modules:settings.scenes.system')),
+                  child: Text(context.i18n('modules:settings.scenes.system')),
                 ),
                 DropdownMenuItem(
                   value: SettingsThemeMode.light,
-                  child: Text(
-                      I18Next.of(context)!.t('modules:settings.scenes.light')),
+                  child: Text(context.i18n('modules:settings.scenes.light')),
                 ),
                 DropdownMenuItem(
                   value: SettingsThemeMode.dark,
-                  child: Text(
-                      I18Next.of(context)!.t('modules:settings.scenes.dark')),
+                  child: Text(context.i18n('modules:settings.scenes.dark')),
                 ),
               ],
               onChanged: (String? themeMode) async {
@@ -111,10 +107,10 @@ class SettingsSectionGeneral extends StatelessWidget {
           const Divider(),
           ListTile(
             title: Text(
-              I18Next.of(context)!.t('modules:settings.scenes.ideSelection'),
+              context.i18n('modules:settings.scenes.ideSelection'),
             ),
             subtitle: Text(
-              I18Next.of(context)!.t(
+              context.i18n(
                   'modules:settings.scenes.whatIdeDoYouWantToOpenYourProjectsWith'),
             ),
             trailing: DropdownButton(
@@ -122,7 +118,7 @@ class SettingsSectionGeneral extends StatelessWidget {
               isDense: true,
               value: settings.sidekick.ide ?? 'none',
               items: [
-                DropdownMenuItem(
+                const DropdownMenuItem(
                   value: 'none',
                   child: Text('None'),
                 ),
@@ -132,7 +128,7 @@ class SettingsSectionGeneral extends StatelessWidget {
                           child: Row(
                             children: [
                               e.icon,
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(e.name),
@@ -149,17 +145,16 @@ class SettingsSectionGeneral extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            title:
-                Text(I18Next.of(context)!.t('modules:settings.scenes.language')),
+            title: Text(context.i18n('modules:settings.scenes.language')),
             trailing: DropdownButton<Locale>(
               underline: Container(),
               isDense: true,
-              value: settings.sidekick.locale ?? I18Next.of(context)?.locale,
+              value: settings.sidekick.locale ?? context.locale,
               items: languageManager.supportedLocales.map((locale) {
                 return DropdownMenuItem(
                   value: locale,
                   child: Text(
-                    I18Next.of(context)!.t(
+                    context.i18n(
                       'settings:sidekick.language.${locale.toLanguageTag()}',
                     ),
                   ),
@@ -173,9 +168,8 @@ class SettingsSectionGeneral extends StatelessWidget {
           ),
           const Divider(),
           ListTile(
-            title: Text(I18Next.of(context)
-                !.t('modules:selectedDetail.components.version')),
-            trailing: Text(packageVersion),
+            title: Text(context.i18n('modules:selectedDetail.components.version')),
+            trailing: const Text(packageVersion),
           ),
           const Divider(),
           ListTile(
@@ -183,8 +177,7 @@ class SettingsSectionGeneral extends StatelessWidget {
                 !.t('modules:settings.scenes.resetToDefaultSettings')),
             trailing: OutlinedButton(
               onPressed: handleReset,
-              child:
-                  Text(I18Next.of(context)!.t('modules:settings.scenes.reset')),
+              child: Text(context.i18n('modules:settings.scenes.reset')),
             ),
           ),
         ],

@@ -19,7 +19,8 @@ class FvmReleaseStatus extends StatelessWidget {
   }) : super(key: key);
 
   /// Release
-  final ReleaseDto release;
+  final ReleaseDto? release;
+
   @override
   Widget build(BuildContext context) {
     if (release == null) {
@@ -27,16 +28,16 @@ class FvmReleaseStatus extends StatelessWidget {
     }
 
     // Will use for channel upgrade comparison
-    var currentRelease = release.release?.version;
-    var latestRelease = release.release?.version;
+    var currentRelease = release!.release?.version;
+    var latestRelease = release!.release?.version;
 
     // If pending setup
-    if (release.needSetup) {
+    if (release!.needSetup) {
       return SetupButton(release: release);
     }
 
     // If it's channel set current release;
-    if (release.isChannel) {
+    if (release?.isChannel ?? false) {
       final channel = release as ChannelDto;
       currentRelease = channel.sdkVersion;
     }
@@ -50,10 +51,8 @@ class FvmReleaseStatus extends StatelessWidget {
             MdiIcons.checkCircle,
             size: 20,
           ),
-          SizedBox(width: release.isChannel ? 10 : 0),
-          release.isChannel
-              ? Text('$currentRelease')
-              : const SizedBox(height: 0),
+          SizedBox(width: release!.isChannel ? 10 : 0),
+          release!.isChannel ? Text(currentRelease!) : const SizedBox(height: 0),
         ],
       );
     }
@@ -61,10 +60,10 @@ class FvmReleaseStatus extends StatelessWidget {
     // If version is master
     if (release is MasterDto) {
       return FvmMasterStatus(ChannelDto(
-        name: release.name,
-        cache: release.cache,
-        isGlobal: release.isGlobal,
-        needSetup: release.needSetup,
+        name: release!.name,
+        cache: release!.cache,
+        isGlobal: release!.isGlobal,
+        needSetup: release!.needSetup,
         sdkVersion: ''
       ));
     }
@@ -80,9 +79,9 @@ class FvmReleaseStatus extends StatelessWidget {
         const SizedBox(width: 10),
         OutlinedButton.icon(
           icon: const Icon(MdiIcons.triangle, size: 15),
-          label: Text(release.release?.version ?? ''),
+          label: Text(release!.release?.version ?? ''),
           onPressed: () {
-            context.read(fvmQueueProvider.notifier).upgrade(context, release);
+            context.read(fvmQueueProvider.notifier).upgrade(context, release!);
           },
         ),
       ],

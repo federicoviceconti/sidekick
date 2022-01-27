@@ -42,7 +42,8 @@ class EmptyDataset extends StatelessWidget {
     this.backgroundColor = Colors.black,
     this.child,
     this.opacity = 0.3,
-  });
+    Key? key,
+  }) : super(key: key);
 
   /// Icon
   final Widget icon;
@@ -71,9 +72,9 @@ class EmptyDataset extends StatelessWidget {
           child: Center(
             child: ClipRRect(
               clipBehavior: Clip.antiAlias,
-              child: Container(
-                width: 350,
-                height: 350,
+              child: SizedBox(
+                width: 450,
+                height: 300,
                 child: Stack(
                   children: bgIcons,
                 ),
@@ -82,8 +83,8 @@ class EmptyDataset extends StatelessWidget {
           ),
         ),
         Center(
-          child: Container(
-            width: 450,
+          child: SizedBox(
+            width: 350,
             height: 350,
             child: child,
           ),
