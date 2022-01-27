@@ -6,7 +6,6 @@ import 'package:async/async.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fvm/fvm.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:state_notifier/state_notifier.dart';
 import 'package:watcher/watcher.dart';
 import 'package:collection/collection.dart';
 
@@ -24,12 +23,10 @@ final cacheSizeProvider =
 
 final unusedReleaseSizeProvider = FutureProvider((ref) {
   final unused = ref.watch(unusedVersionProvider);
-
   // Get all directories
   final directories = unused.map((version) => version.cache?.dir)
       .whereNotNull()
       .toList();
-
   return getDirectoriesSize(directories);
 });
 
@@ -53,7 +50,7 @@ final unusedVersionProvider = Provider((ref) {
 
 /// Releases  InfoProvider
 final fvmCacheProvider =
-    StateNotifierProvider<FvmCacheProvider, List<CacheVersion>?>((ref) {
+    StateNotifierProvider<FvmCacheProvider, List<CacheVersion>>((ref) {
   return FvmCacheProvider(ref: ref);
 });
 
@@ -63,9 +60,12 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
   }) : super([]) {
     reloadState();
     // Load State again while listening to directory
-    directoryWatcher =
-        Watcher(FVMClient.context.cacheDir.path).events.listen((event) {
-      _debouncer.run(reloadState);
+    directoryWatcher = Watcher(
+      FVMClient.context.cacheDir.path,
+    ).events.listen((event) {
+      if (event.type == ChangeType.ADD || event.type == ChangeType.REMOVE) {
+        _debouncer.run(reloadState);
+      }
     });
   }
 
@@ -73,6 +73,7 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
   List<CacheVersion> channels = [];
   List<CacheVersion> versions = [];
   List<CacheVersion>? all;
+  String lastChangeHash = '';
 
   StreamSubscription<WatchEvent>? directoryWatcher;
   final _debouncer = Debouncer(const Duration(seconds: 20));
@@ -96,7 +97,9 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
 
   CacheVersion? getChannel(String name) {
     if (channels.isNotEmpty) {
-      return channels.firstWhereOrNull((c) => c.name == name);
+      return channels.firstWhereOrNull(
+        (c) => c.name == name,
+      );
     } else {
       return null;
     }
@@ -104,7 +107,9 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
 
   CacheVersion? getVersion(String name) {
     if (versions.isNotEmpty) {
-      return versions.firstWhereOrNull((v) => v.name == name);
+      return versions.firstWhereOrNull(
+        (v) => v.name == name,
+      );
     } else {
       return null;
     }
@@ -117,9 +122,8 @@ class FvmCacheProvider extends StateNotifier<List<CacheVersion>> {
   }
 }
 
-final fvmStdoutProvider = StreamGroup
-    .mergeBroadcast(_getConsoleStreams())
-    .transform(utf8.decoder);
+final fvmStdoutProvider =
+    StreamGroup.mergeBroadcast(_getConsoleStreams()).transform(utf8.decoder);
 
 List<Stream<List<int>>> _getConsoleStreams() {
   return [

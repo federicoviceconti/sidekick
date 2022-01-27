@@ -3,9 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:i18next/i18next.dart';
+import 'package:collection/collection.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
 
 import '../../components/atoms/checkbox.dart';
 import '../../components/atoms/refresh_button.dart';
@@ -33,13 +34,13 @@ class ProjectsScreen extends HookWidget {
     Future<void> onRefresh() async {
       await context.read(projectsProvider.notifier).load();
       notify(
-        I18Next.of(context)!.t('modules:projects.projectsRefreshed'),
+        context.i18n('modules:projects.projectsRefreshed'),
       );
     }
 
     Future<void> handleChooseDirectory() async {
       final directoryPath = await selector.getDirectoryPath(
-        confirmButtonText: I18Next.of(context)!.t('modules:projects.choose'),
+        confirmButtonText: context.i18n('modules:projects.choose'),
       );
       if (directoryPath == null) {
         // Operation was canceled by the user.
@@ -51,7 +52,7 @@ class ProjectsScreen extends HookWidget {
     useEffect(() {
       if (settings.sidekick.onlyProjectsWithFvm) {
         filteredProjects.value =
-            projects.where((p) => p.pinnedVersion != null).toList();
+            projects.where((p) => p?.pinnedVersion != null).toList();
       } else {
         filteredProjects.value = [...projects];
       }
@@ -59,10 +60,10 @@ class ProjectsScreen extends HookWidget {
     }, [projects, settings.sidekick]);
 
     return SkScreen(
-      title: I18Next.of(context)!.t('modules:projects.projects'),
+      title: context.i18n('modules:projects.projects'),
       actions: [
         Caption(
-          I18Next.of(context)!.t(
+          context.i18n(
             'modules:projects.projectsProjects',
             variables: {
               'projects': projects.length,
@@ -71,10 +72,9 @@ class ProjectsScreen extends HookWidget {
         ),
         const SizedBox(width: 10),
         Tooltip(
-          message: I18Next.of(context)
-              !.t('modules:projects.onlyDisplayProjectsThatHaveVersionsPinned'),
+          message: context.i18n('modules:projects.onlyDisplayProjectsThatHaveVersionsPinned'),
           child: SkCheckBox(
-            label: I18Next.of(context)!.t('modules:projects.fvmOnly'),
+            label: context.i18n('modules:projects.fvmOnly'),
             value: settings.sidekick.onlyProjectsWithFvm,
             onChanged: (value) {
               settings.sidekick.onlyProjectsWithFvm = value;
@@ -89,19 +89,19 @@ class ProjectsScreen extends HookWidget {
         const SizedBox(width: 10),
         OutlinedButton.icon(
           onPressed: handleChooseDirectory,
-          icon: Icon(MdiIcons.plus),
-          label: Text(I18Next.of(context)!.t('modules:projects.addProject')),
+          icon: const Icon(MdiIcons.plus),
+          label: Text(context.i18n('modules:projects.addProject')),
         ),
       ],
       child: projects.isEmpty
-          ? EmptyProjects()
+          ? const EmptyProjects()
           : CupertinoScrollbar(
               child: Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: ResponsiveGridList(
                     desiredItemWidth: 290,
                     minSpacing: 0,
-                    children: filteredProjects.value.map((project) {
+                    children: filteredProjects.value.whereNotNull().map((project) {
                       return Padding(
                         padding: const EdgeInsets.only(top: 10, right: 10),
                         child: ProjectListItem(

@@ -71,11 +71,6 @@ final searchResultsProvider = Provider((ref) {
 
   final projects = ref.read(projectsProvider);
 
-  // If projects is not fetched or there is no query return empty results
-  if (projects == null || query == null) {
-    return SearchResults();
-  }
-
   // Split query into multiple search terms
   final searchTerms = query.toLowerCase().split(' ');
 
@@ -95,6 +90,8 @@ final searchResultsProvider = Provider((ref) {
     }
     // Loop projects
     for (final project in projects) {
+      if(project == null) continue;
+
       // Limit results to only 5 projects
       if (projectResults.length >= 5) {
         break;
@@ -118,21 +115,21 @@ final searchResultsProvider = Provider((ref) {
 
     // Look through the releases to see if
     // query matches release names
-    for (final release in releaseState.versions ?? []) {
+    for (final release in releaseState.versions) {
       // Get channel name to pass to map
-      final channelName = release.release.channelName;
+      final channelName = release.release?.channelName;
 
       // Only unique results
       if (uniques[release.name] == true) break;
 
       // Match result that name or channel name starts with term
-      if (release.name.startsWith(term) || channelName.startsWith(term)) {
+      if (release.name.startsWith(term) || (channelName != null && channelName.startsWith(term))) {
         // Track unique insertions
         uniques[release.name] = true;
 
         // Map releases to channel groups
         // TODO: remove this logic and use filterable
-        switch (release.release.channel) {
+        switch (release.release?.channel) {
           case Channel.stable:
             stableReleaseResults.add(release);
             break;
@@ -153,7 +150,7 @@ final searchResultsProvider = Provider((ref) {
     }
 
     //Loop channels
-    for (final channel in releaseState.channels ?? []) {
+    for (final channel in releaseState.channels) {
       // Only unique results
       if (uniques[channel.name] == true) break;
 
@@ -167,7 +164,6 @@ final searchResultsProvider = Provider((ref) {
       }
     }
   }
-  ;
 
   return SearchResults(
     channels: channelResults,

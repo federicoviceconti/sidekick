@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import 'package:sidekick/src/modules/updater/updater.dto.dart';
 
 import '../../../version.dart';
@@ -24,7 +25,7 @@ class SkUpdateInfo extends HookWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            I18Next.of(context)!.t(
+            context.i18n(
               'modules:updater.components.aNewVersionOfSidekickIsAvailableUpdateinfolatest',
               variables: {
                 'updateInfoLatest': updateInfo.latest,
@@ -49,16 +50,15 @@ class SkUpdateInfo extends HookWidget {
         const SizedBox(width: 5),
         const Text(packageVersion),
         const SizedBox(width: 20),
-        Text('${updateInfo?.latest}'),
+        Text(updateInfo?.latest ?? ''),
         const SizedBox(width: 20),
-        updateInfo != null
-            ? OutlinedButton.icon(
-              icon: Icon(
-                updateInfo.needUpdate ? Icons.file_download : Icons.refresh,
-              ),
-              label: Text(I18Next.of(context)!.t('components:atoms.refresh')),
-              onPressed: updater.checkLatest,
-            ) : IgnorePointer(),
+        updateInfo != null ? OutlinedButton.icon(
+          icon: Icon(
+            updateInfo.needUpdate ? Icons.file_download : Icons.refresh,
+          ),
+          label: Text(context.i18n('components:atoms.refresh')),
+          onPressed: updater.checkLatest,
+        ) : const IgnorePointer(),
       ],
     );
   }

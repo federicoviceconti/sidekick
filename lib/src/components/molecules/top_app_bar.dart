@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sidekick/src/components/atoms/typography.dart';
@@ -9,6 +10,7 @@ import 'package:sidekick/src/modules/settings/settings.screen.dart';
 import 'package:sidekick/src/modules/updater/components/update_button.dart';
 import 'package:sidekick/src/theme.dart';
 import 'package:sidekick/src/version.dart';
+import 'package:sidekick/src/window_border.dart';
 
 /// Sidekick top app bar
 class SkAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -37,16 +39,35 @@ class SkAppBar extends StatelessWidget implements PreferredSizeWidget {
           .goTo(NavigationRoutes.searchScreen);
     }
 
+    Widget renderTitle() {
+      if (!Platform.isMacOS) {
+        return Row(
+          children: const [
+            SizedBox(width: 10),
+            Caption(kAppTitle),
+          ],
+        );
+      }
+      return const Caption(kAppTitle);
+    }
+
     return AppBar(
       backgroundColor: platformBackgroundColor(context),
-      title: Platform.isMacOS
-          ? const Caption(kAppTitle)
-          : const SizedBox(height: 0, width: 0),
-      centerTitle: true,
+      title: renderTitle(),
+      centerTitle: Platform.isWindows ? false : true,
+      titleSpacing: 0,
+      leading: Platform.isMacOS ? const WindowButtons() : null,
       actions: [
         const SkUpdateButton(),
-        const SizedBox(width: 10),
-        Center(child: Caption(packageVersion)),
+        const SizedBox(
+          width: 10,
+        ),
+        Row(
+          children: const [
+            SizedBox(width: 10),
+            Caption(packageVersion),
+          ],
+        ),
         const SizedBox(width: 10),
         IconButton(
           icon: const Icon(Icons.search),
@@ -61,6 +82,7 @@ class SkAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: openSettingsScreen,
         ),
         const SizedBox(width: 10),
+        if (!Platform.isMacOS) const WindowButtons(),
       ],
       bottom: const PreferredSize(
         preferredSize: Size.fromHeight(1),
@@ -72,7 +94,7 @@ class SkAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       // shadowColor: Colors.transparent,
       // backgroundColor: Colors.transparent,
-      // flexibleSpace: const BlurBackground(),
+      flexibleSpace: MoveWindow(),
     );
   }
 }

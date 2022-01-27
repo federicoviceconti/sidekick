@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:i18next/i18next.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import 'package:collection/collection.dart';
 
 import '../../modules/common/dto/release.dto.dart';
@@ -18,12 +19,14 @@ class VersionInstallButton extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final installedMsg =
-        I18Next.of(context)!.t('components:molecules.versionIsInstalled');
+        context.i18n('components:molecules.versionIsInstalled');
     final notInstalledMsg = I18Next.of(context)
         !.t('components:molecules.versionNotInstalledClickToInstall');
     final isQueued = useState(false);
     final hovering = useState(false);
     final queueProvider = useProvider(fvmQueueProvider);
+
+    final isCached = version?.isCached == true;
 
     useEffect(() {
       final isInstalling = queueProvider?.activeItem != null &&
@@ -50,7 +53,7 @@ class VersionInstallButton extends HookWidget {
     }
 
     Widget installIcon() {
-      if ((isQueued.value && version != null && !version!.isCached)) {
+      if ((isQueued.value && !isCached)) {
         return SizedBox(
           height: 20,
           width: 20,
@@ -61,7 +64,7 @@ class VersionInstallButton extends HookWidget {
         );
       }
 
-      if (version?.isCached ?? false) {
+      if (isCached) {
         return Icon(
           Icons.check,
           size: 20,
@@ -88,14 +91,14 @@ class VersionInstallButton extends HookWidget {
         }
       },
       child: Opacity(
-        opacity: (version?.isCached ?? false) ? 0.3 : 1,
+        opacity: isCached ? 0.3 : 1,
         child: IconButton(
           onPressed: onInstall,
           splashRadius: 20,
           icon: Tooltip(
-              message:
-                  (version?.isCached ?? false) ? installedMsg : notInstalledMsg,
-              child: installIcon()),
+            message: isCached ? installedMsg : notInstalledMsg,
+            child: installIcon(),
+          ),
         ),
       ),
     );

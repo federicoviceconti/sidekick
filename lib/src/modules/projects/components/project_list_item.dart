@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:fvm/fvm.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:i18next/i18next.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:sidekick/src/modules/projects/project.dto.dart';
+import 'package:sidekick/src/modules/common/utils/helpers.dart';
 import 'package:sidekick/src/modules/settings/settings.provider.dart';
 import 'package:sidekick/src/modules/settings/settings.utils.dart';
 
@@ -12,6 +10,7 @@ import '../../../components/atoms/typography.dart';
 import '../../../components/molecules/version_install_button.dart';
 import '../../releases/releases.provider.dart';
 import '../../sandbox/sandbox.screen.dart';
+import '../project.dto.dart';
 import 'project_actions.dart';
 import 'project_release_select.dart';
 
@@ -25,7 +24,7 @@ class ProjectListItem extends HookWidget {
   }) : super(key: key);
 
   /// Flutter project
-  final Project project;
+  final FlutterProject project;
 
   /// Show version selector
   final bool versionSelect;
@@ -58,18 +57,16 @@ class ProjectListItem extends HookWidget {
       ide?.launch(context, project.projectDir.absolute.path);
     }
 
-    return Container(
+    return SizedBox(
       height: 170,
       child: Center(
         child: Card(
           child: Column(
             children: [
-              Container(
-                child: ListTile(
-                  leading: const Icon(MdiIcons.alphaPBox),
-                  title: Subheading(project.name ?? ''),
-                  trailing: ProjectActions(project as FlutterProject),
-                ),
+              ListTile(
+                leading: const Icon(MdiIcons.alphaPBox),
+                title: Subheading(project.name ?? ''),
+                trailing: ProjectActions(project),
               ),
               const Divider(height: 0, thickness: 1),
               Padding(
@@ -80,7 +77,7 @@ class ProjectListItem extends HookWidget {
                       child: Column(
                         children: [
                           Paragraph(
-                            (project as FlutterProject).description,
+                            project.description,
                             maxLines: 2,
                           ),
                         ],
@@ -95,7 +92,7 @@ class ProjectListItem extends HookWidget {
                 children: [
                   const SizedBox(width: 10),
                   Tooltip(
-                    message: I18Next.of(context)!.t(
+                    message: context.i18n(
                         'modules:projects.components.openTerminalPlayground'),
                     child: IconButton(
                       iconSize: 20,
@@ -106,16 +103,16 @@ class ProjectListItem extends HookWidget {
                   ),
                   if (ideName != null)
                     Tooltip(
-                      message: I18Next.of(context)
-                          !.t('modules:projects.components.openIde', variables: {
+                      message: context.i18n(
+                          'modules:projects.components.openIde', variables: {
                         'ideName': ide?.name,
                       }),
-                      child: IconButton(
+                      child: ide != null ? IconButton(
                         iconSize: 20,
                         splashRadius: 20,
-                        icon: ide?.icon ?? Container(),
+                        icon: ide.icon,
                         onPressed: openIde,
-                      ),
+                      ) : const IgnorePointer(),
                     ),
                   const Spacer(),
                   versionSelect
@@ -129,7 +126,7 @@ class ProjectListItem extends HookWidget {
                                     width: 0,
                                   ),
                             ProjectReleaseSelect(
-                              project: project as FlutterProject,
+                              project: project,
                               releases: cachedVersions,
                             )
                           ],

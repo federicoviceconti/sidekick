@@ -1,16 +1,16 @@
 import 'dart:io';
 
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:i18next/i18next.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sidekick/i18n/language_manager.dart';
-import 'package:sidekick/src/modules/common/utils/migrateFiles.dart';
-import 'package:window_size/window_size.dart';
+import 'package:sidekick/src/modules/common/utils/migrate_files.dart';
 
 import 'src/modules/common/app_shell.dart';
 import 'src/modules/common/constants.dart';
@@ -24,6 +24,11 @@ import 'src/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Transparency compatibility for windows & linux
+  if (!Platform.isMacOS) {
+    await Window.initialize();
+  }
+
   Hive.registerAdapter(SidekickSettingsAdapter());
   Hive.registerAdapter(ProjectPathAdapter());
   final hiveDir = await getApplicationSupportDirectory();
@@ -37,20 +42,29 @@ void main() async {
     await SettingsService.init();
     await ProjectsService.init();
   } on FileSystemException {
-    print('There was an issue opening the DB');
+    //print('There was an issue opening the DB');
   }
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle(kAppTitle);
-    setWindowMinSize(const Size(800, 500));
-    setWindowMaxSize(Size.infinite);
+  if (!(Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    //print('Sidekick is not supported on your platform');
+    exit(0);
   }
 
-  runApp(ProviderScope(child: FvmApp()));
+  runApp(const ProviderScope(child: FvmApp()));
+
+  doWhenWindowReady(() {
+    const initialSize = Size(800, 500);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }
 
 /// Fvm App
 class FvmApp extends StatelessWidget {
+  const FvmApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     if (SettingsService.box == null) {
@@ -61,7 +75,6 @@ class FvmApp extends StatelessWidget {
       valueListenable: SettingsService.box!.listenable(),
       builder: (context, box, widget) {
         final settings = SettingsService.read();
-
         return OKToast(
           child: MaterialApp(
             localizationsDelegates: [
@@ -70,9 +83,7 @@ class FvmApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               ...GlobalCupertinoLocalizations.delegates,
             ],
-            locale: settings.locale ??
-                I18Next.of(context)?.locale ??
-                languageManager.supportedLocales.first,
+            locale: settings.locale ?? languageManager.supportedLocales.first,
             supportedLocales: languageManager.supportedLocales,
             localeResolutionCallback: (
               Locale? locale,
